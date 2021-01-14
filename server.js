@@ -15,6 +15,7 @@ app.use(jwt());
 
 // api routes
 app.use('/users', require('./users/users.controller'));
+// app.use('/todos', require('./ToDos/todosApi'));
 
 // global error handler
 app.use(errorHandler);
@@ -22,5 +23,5 @@ app.use(errorHandler);
 // start server
 const port = process.env.NODE_ENV === 'production' ? 80 : 4000;
 const server = app.listen(port, function () {
-    console.log('Server listening on port ' + port);
+    console.log('Gsb server listening on port ' + port);
 });
