@@ -1,12 +1,23 @@
 ﻿const config = require('config.json');
 const jwt = require('jsonwebtoken');
+const googleTrends = require('google-trends-api');
 
 // users hardcoded for simplicity, store in a db for production applications
-const users = [{ id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User' }];
+const users = [
+    {
+        id: 1,
+        username: 'test',
+        password: 'test',
+        firstName: 'Test',
+        lastName: 'User',
+        deviceID: ''
+    }
+];
 
 module.exports = {
     authenticate,
-    getAll
+    getAll,
+    getGoogleTrends
 };
 
 async function authenticate({ username, password }) {
@@ -25,6 +36,16 @@ async function authenticate({ username, password }) {
 
 async function getAll() {
     return users.map(u => omitPassword(u));
+}
+
+async function getGoogleTrends() {
+    return googleTrends.interestOverTime({ keyword: 'Women\'s march' })
+        .then(function (results) {
+            console.log('These results are awesome', results);
+        })
+        .catch(function (err) {
+            console.error('Oh no there was an error', err);
+        });
 }
 
 // helper functions
