@@ -12,7 +12,7 @@ async function getGoogleTrends() {
         if (err) {
             console.log(err);
         } else {
-            console.log(results);
+            // console.log(results);
         }
     });
 }

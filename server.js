@@ -24,8 +24,8 @@ app.get('/:country', async (req, res) => {
             .then(function (results) {
                 var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
                 for (var i = 0; i < arr.length; i++) {
-                    result.push(arr[i].title.query)
-                    // result.push(arr[i])
+                    // result.push(arr[i].title.query)
+                    result.push(arr[i])
                 }
                 res.json(result)
             })
