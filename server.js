@@ -17,7 +17,7 @@ app.use(cors());
 // api routes
 app.use('/users', require('./users/users.controller'));
 app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
-app.get('/:country/removedthistext', async (req, res) => {
+app.get('/:country/removethistext', async (req, res) => {
     try {
         var result = [];
         await googleTrends.dailyTrends({ geo: req.params.country })
@@ -86,7 +86,6 @@ app.get("/:country", async (req, res) => {
             })
     } catch (err) { console.log(err) }
 })
-
 
 app.get("/:keyword/:keyword2", async (req, res) => {
     try {
