@@ -17,7 +17,7 @@ app.use(cors());
 // api routes
 app.use('/users', require('./users/users.controller'));
 app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
-app.get('/:country', async (req, res) => {
+app.get('/:country/test', async (req, res) => {
     try {
         var result = [];
         await googleTrends.dailyTrends({ geo: req.params.country })
@@ -36,14 +36,14 @@ app.get('/:country', async (req, res) => {
     } catch (err) { console.log(err) }
 });
 
-app.get("/:keyword/:keyword2", async (req, res) => {
+app.get("/:country", async (req, res) => {
     try {
         //console.log('reached')	        
         var result = [];
         var result2 = [];
         var result3 = [];
 
-        googleTrends.interestOverTime({ keyword: req.params.keyword })
+        googleTrends.interestOverTime({ keyword: 'test' })
             .then(function (results) {
                 // console.log((JSON.parse(results).default.timelineData[0]));	
                 JSON.parse(results).default.timelineData.map((data, i) => {
@@ -53,12 +53,12 @@ app.get("/:keyword/:keyword2", async (req, res) => {
                     })
                 })
             }).then(function () {
-                googleTrends.interestOverTime({ keyword: req.params.keyword2 }).then(function (results) {	                        // console.log((JSON.parse(results).default.timelineData[0]));	
+                googleTrends.interestOverTime({ keyword: 'test2' }).then(function (results) {	                        // console.log((JSON.parse(results).default.timelineData[0]));	
                     JSON.parse(results).default.timelineData.map((data, i) => {
                         result2.push({ 'date': data.formattedTime, 'value': data.value[0] })
                     })
                 }).then(function () {
-                    googleTrends.interestOverTime({ keyword: req.params.keyword + " " + req.params.keyword2 })
+                    googleTrends.interestOverTime({ keyword: 'test' + " " + 'test2' })
                         .then(function (results) {
                             // console.log((JSON.parse(results).default.timelineData[0]));	
                             JSON.parse(results).default.timelineData.map((data, i) => {
@@ -70,9 +70,9 @@ app.get("/:keyword/:keyword2", async (req, res) => {
                             var final = new Array(result.length + 1);
                             final[0] = new Array(4);
                             final[0][0] = "Timeline";
-                            final[0][1] = req.params.keyword;
-                            final[0][2] = req.params.keyword2
-                            final[0][3] = req.params.keyword + " " + req.params.keyword2;
+                            final[0][1] = 'test';
+                            final[0][2] = 'test2'
+                            final[0][3] = 'test' + " " + 'test2';
                             for (var i = 1; i < final.length; i++) {
                                 final[i] = new Array(4);
                                 final[i][0] = result[i - 1] && result[i - 1].date ? result[i - 1].date : "";
