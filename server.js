@@ -20,15 +20,15 @@ app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 app.get('/:country', async (req, res) => {
     try {
         var result = [];
-        await googleTrends.dailyTrends({ geo: req.params.country })
-            .then(function (results) {
-                var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
-                for (var i = 0; i < arr.length; i++) {
-                    // result.push(arr[i].title.query)
-                    result.push(arr[i])
-                }
-                res.json(result)
-            })
+        // await googleTrends.dailyTrends({ geo: req.params.country })
+        //     .then(function (results) {
+        //         var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
+        //         for (var i = 0; i < arr.length; i++) {
+        //             // result.push(arr[i].title.query)
+        //             result.push(arr[i])
+        //         }
+        //         res.json(result)
+        //     })
         console.log(result);
         //res.json({'trend1':trend1,'trend2':trend2})
     } catch (err) { console.log(err) }
