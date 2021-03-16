@@ -9,7 +9,7 @@ const googleTrends = require('google-trends-api');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+// app.use(cors());
 
 // use JWT auth to secure the api
 app.use(jwt());
@@ -113,7 +113,8 @@ app.use(errorHandler);
 
 // start server
 // const port = process.env.NODE_ENV === 'production' ? 80 : 4000;
-const port = process.env.port || 4000;
+// has to be PORT, not port
+const port = process.env.PORT || 4000;
 
 const server = app.listen(port, function () {
     console.log('Gsb server listening on port ' + port);
