@@ -17,13 +17,12 @@ app.use(cors());
 // api routes
 app.use('/users', require('./users/users.controller'));
 app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
-app.get('/:country', async (req, res) => {
+app.get('/:country/removedthistext', async (req, res) => {
     try {
         var result = [];
         await googleTrends.dailyTrends({ geo: req.params.country })
             .then(function (results) {
                 console.log('dailyTrends result1: ' + results);
-                var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
                 var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
                 for (var i = 0; i < arr.length; i++) {
                     // result.push(arr[i].title.query)
@@ -87,6 +86,21 @@ app.get('/:country', async (req, res) => {
 //             })
 //     } catch (err) { console.log(err) }
 // })
+
+app.get("/:country", async (req, res) => {
+    try {
+        //console.log('reached')	        
+        var result = [];
+        var result2 = [];
+        var result3 = [];
+
+        googleTrends.dailyTrends({ geo: req.params.country })
+            .then(function (results) {
+                console.log('results are: ' + results);	
+                res.json(results)
+            })
+    } catch (err) { console.log(err) }
+})
 
 app.get("/:keyword/:keyword2", async (req, res) => {
     try {
