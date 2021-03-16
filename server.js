@@ -24,13 +24,12 @@ app.get('/:country', async (req, res) => {
             .then(function (results) {
                 console.log('dailyTrends result1: ' + results);
                 // var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
-                // var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
-                // for (var i = 0; i < arr.length; i++) {
-                //     // result.push(arr[i].title.query)
-                //     result.push(arr[i])
-                // }
-                result.push('test');
-                res.json(result)
+                var arr = JSON.stringify(results).default.trendingSearchesDays[0].trendingSearches
+                for (var i = 0; i < arr.length; i++) {
+                    // result.push(arr[i].title.query)
+                    result.push(arr[i])
+                }
+                res.stringify(result)
             })
         console.log('dailyTrends result2: ' + result);
         //res.json({'trend1':trend1,'trend2':trend2})
