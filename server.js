@@ -95,10 +95,15 @@ app.get("/:country", async (req, res) => {
         var result3 = [];
 
         googleTrends.interestOverTime({ keyword: req.params.country })
-            .then(function (results) {
-                console.log('results are: ' + results);	
-                res.json(results)
+        .then(function (results) {
+            console.log((JSON.parse(results).default.timelineData[0]));	
+            JSON.parse(results).default.timelineData.map((data, i) => {
+                result.push({
+                    'date': data.formattedTime,
+                    'value': data.value[0]
+                })
             })
+        })
     } catch (err) { console.log(err) }
 })
 
