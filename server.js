@@ -14,7 +14,7 @@ app.use(cors());
 // use JWT auth to secure the api
 app.use(jwt());
 
-// api routes
+// api routes 
 app.use('/users', require('./users/users.controller'));
 app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 app.get('/:country', async (req, res) => {
