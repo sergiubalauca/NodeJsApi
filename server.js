@@ -22,7 +22,8 @@ app.get('/:country', async (req, res) => {
         var result = [];
         await googleTrends.dailyTrends({ geo: req.params.country })
             .then(function (results) {
-                var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
+                // var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
+                var arr = results.default.trendingSearchesDays[0].trendingSearches
                 for (var i = 0; i < arr.length; i++) {
                     // result.push(arr[i].title.query)
                     result.push(arr[i])
