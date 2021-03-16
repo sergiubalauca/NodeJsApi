@@ -94,7 +94,7 @@ app.get("/:country", async (req, res) => {
         var result2 = [];
         var result3 = [];
 
-        googleTrends.dailyTrends({ geo: req.params.country })
+        googleTrends.interestOverTime({ keyword: req.params.country })
             .then(function (results) {
                 console.log('results are: ' + results);	
                 res.json(results)
