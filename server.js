@@ -22,15 +22,16 @@ app.get('/:country', async (req, res) => {
         var result = [];
         await googleTrends.dailyTrends({ geo: req.params.country })
             .then(function (results) {
+                console.log('dailyTrends result1: ' + results);
                 // var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
-                var arr = results.default.trendingSearchesDays[0].trendingSearches
+                var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
                 for (var i = 0; i < arr.length; i++) {
                     // result.push(arr[i].title.query)
                     result.push(arr[i])
                 }
                 res.json(result)
             })
-        console.log('dailyTrends result: ' + result);
+        console.log('dailyTrends result2: ' + result);
         //res.json({'trend1':trend1,'trend2':trend2})
     } catch (err) { console.log(err) }
 });
@@ -76,7 +77,7 @@ app.get("/:keyword/:keyword2", async (req, res) => {
                                 final[i] = new Array(4);
                                 final[i][0] = result[i - 1] && result[i - 1].date ? result[i - 1].date : "";
                                 final[i][1] = result[i - 1] && result[i - 1].value;
-                                final[i][2] = result2 && result2.length && result2[i - 1].value ? result2[i - 1].value : 0;                            
+                                final[i][2] = result2 && result2.length && result2[i - 1].value ? result2[i - 1].value : 0;
                                 final[i][3] = result3 && result3.length && result3[i - 1].value ? result3[i - 1].value : 0;
                             }
                             res.json(final);
