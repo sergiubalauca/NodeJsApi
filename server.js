@@ -31,11 +31,12 @@ app.use(cors());
 
 // use JWT auth to secure the api 
 app.use(jwt());
+app.options('/:country', cors());
 
 // api routes 
 app.use('/users', require('./users/users.controller'));
 app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
-app.get('/:country',  (req, res) => {
+app.get('/:country', cors(), (req, res) => {
     try {
         var result = [];
          googleTrends.dailyTrends({ geo: req.params.country })
