@@ -41,6 +41,7 @@ app.get('/:country', cors(), (req, res) => {
         var result = [];
         googleTrends.dailyTrends({ geo: req.params.country })
             .then(function (results) {
+                process.on('---warning---', e => console.warn(e.stack));
                 console.log('results are: ' + results);
                 var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
                 for (var i = 0; i < arr.length; i++) {
