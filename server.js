@@ -35,10 +35,10 @@ app.use(jwt());
 // api routes 
 app.use('/users', require('./users/users.controller'));
 app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
-app.get('/:country', async (req, res) => {
+app.get('/:country',  (req, res) => {
     try {
         var result = [];
-        await googleTrends.dailyTrends({ geo: req.params.country })
+         googleTrends.dailyTrends({ geo: req.params.country })
             .then(function (results) {
                 console.log('results are: ' + results);
                 var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
