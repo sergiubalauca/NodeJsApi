@@ -46,31 +46,21 @@ let query = {
     agent: proxyAgent
 };
 
-
-// OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
-// will return a promise as in case OPTION 2
 app.get('/:country', cors(), (req, res) => {
-    var result = [];
     googleTrends.dailyTrends({
-        trendDate: new Date(),
-        geo: req.params.country,
+        trendDate: new Date('2021-03-19'),
+        geo: 'US',
     }, function (err, results) {
         if (err) {
             console.log('oh no error!', err);
         } else {
             console.log(results);
-            var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
-            for (var i = 0; i < arr.length; i++) {
-                // result.push(arr[i].title.query)
-                result.push(arr[i])
-            }
-            res.json(result)
         }
     });
 });
 
 
-// OPTION 2
+
 app.get('/:country/test', cors(), (req, res) => {
     try {
         var result = [];
