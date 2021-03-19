@@ -49,7 +49,7 @@ let query = {
 
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
 // will return a promise as in case OPTION 2
-app.get('/:country', cors(), (req, res) => {
+app.get('/:country/:day', cors(), (req, res) => {
     var result = [];
     googleTrends.dailyTrends({
         trendDate: new Date(),
@@ -58,12 +58,12 @@ app.get('/:country', cors(), (req, res) => {
         if (err) {
             console.log('oh no error!', err);
         } else {
-            console.log(results);
-            var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
+            var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
             for (var i = 0; i < arr.length; i++) {
                 // result.push(arr[i].title.query)
                 result.push(arr[i])
             }
+            console.log(result);
             res.json(result)
         }
     });
