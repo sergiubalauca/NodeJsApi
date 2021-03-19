@@ -47,15 +47,16 @@ let query = {
 };
 
 app.get('/:country', cors(), (req, res) => {
-    try {
-        googleTrends.interestOverTime(query)
-            .then(function (results) {
-                console.log('These proxied results are incredible', results);
-            })
-            .catch(function (err) {
-                console.error('Oh no there was an error, double check your proxy settings', err);
-            });
-    } catch (err) { console.log('ERROR in gTrends: ' + err) }
+    googleTrends.dailyTrends({
+        trendDate: new Date('2019-01-10'),
+        geo: 'US',
+    }, function (err, results) {
+        if (err) {
+            console.log('oh no error!', err);
+        } else {
+            console.log(results);
+        }
+    });
 });
 
 
