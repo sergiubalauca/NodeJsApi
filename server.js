@@ -46,6 +46,9 @@ let query = {
     agent: proxyAgent
 };
 
+
+// OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
+// will return a promise as in case OPTION 2
 app.get('/:country', cors(), (req, res) => {
     var result = [];
     googleTrends.dailyTrends({
@@ -67,7 +70,7 @@ app.get('/:country', cors(), (req, res) => {
 });
 
 
-
+// OPTION 2
 app.get('/:country/test', cors(), (req, res) => {
     try {
         var result = [];
