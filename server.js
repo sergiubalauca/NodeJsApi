@@ -36,7 +36,31 @@ app.options('/:country', cors());
 // api routes 
 app.use('/users', require('./users/users.controller'));
 app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
+
+const HttpsProxyAgent = require('https-proxy-agent');
+
+let proxyAgent = new HttpsProxyAgent('http://proxy-host:8888/');
+
+let query = {
+    keyword: 'Women\'s march',
+    agent: proxyAgent
+};
+
 app.get('/:country', cors(), (req, res) => {
+    try {
+        googleTrends.interestOverTime(query)
+            .then(function (results) {
+                console.log('These proxied results are incredible', results);
+            })
+            .catch(function (err) {
+                console.error('Oh no there was an error, double check your proxy settings', err);
+            });
+    } catch (err) { console.log('ERROR in gTrends: ' + err) }
+});
+
+
+
+app.get('/:country/test', cors(), (req, res) => {
     try {
         var result = [];
         googleTrends.dailyTrends({ geo: req.params.country })
