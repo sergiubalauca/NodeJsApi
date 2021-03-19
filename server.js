@@ -48,7 +48,7 @@ let query = {
 
 app.get('/:country', cors(), (req, res) => {
     googleTrends.dailyTrends({
-        trendDate: new Date('2019-01-10'),
+        trendDate: new Date('2021-03-19'),
         geo: 'US',
     }, function (err, results) {
         if (err) {
