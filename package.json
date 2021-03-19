@@ -17,6 +17,7 @@
         "express": "^4.17.1",
         "express-jwt": "^6.0.0",
         "google-trends-api": "^4.9.2",
+        "https-proxy-agent": "^5.0.0",
         "jsonwebtoken": "^8.5.1",
         "mssql": "^6.3.1",
         "rootpath": "^0.1.2"
