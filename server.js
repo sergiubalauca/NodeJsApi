@@ -9,7 +9,7 @@ const googleTrends = require('google-trends-api');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.use(cors());
+app.use(cors());
 
 // extra cors stuff with origins allowed
 // var allowedOrigins = ['http://localhost:8100',
@@ -94,7 +94,7 @@ app.get("/:keyword/:keyword2", async (req, res) => {
                                 final[i] = new Array(4);
                                 final[i][0] = result[i - 1] && result[i - 1].date ? result[i - 1].date : "";
                                 final[i][1] = result[i - 1] && result[i - 1].value;
-                                final[i][2] = result2 && result2.length && result2[i - 1].value ? result2[i - 1].value : 0;                            
+                                final[i][2] = result2 && result2.length && result2[i - 1].value ? result2[i - 1].value : 0;
                                 final[i][3] = result3 && result3.length && result3[i - 1].value ? result3[i - 1].value : 0;
                             }
                             res.json(final);
