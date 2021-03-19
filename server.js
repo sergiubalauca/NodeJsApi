@@ -39,7 +39,7 @@ app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 app.get('/:country', cors(), (req, res) => {
     try {
         var result = [];
-         googleTrends.dailyTrends({ geo: req.params.country })
+        googleTrends.dailyTrends({ geo: req.params.country })
             .then(function (results) {
                 console.log('results are: ' + results);
                 var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
@@ -51,7 +51,7 @@ app.get('/:country', cors(), (req, res) => {
             })
         console.log(result);
         //res.json({'trend1':trend1,'trend2':trend2})
-    } catch (err) { console.log(err) }
+    } catch (err) { console.log('ERROR in gTrends: ' + err) }
 });
 
 app.get("/:keyword/:keyword2", async (req, res) => {
