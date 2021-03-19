@@ -47,14 +47,21 @@ let query = {
 };
 
 app.get('/:country', cors(), (req, res) => {
+    var result = [];
     googleTrends.dailyTrends({
-        trendDate: new Date('2021-03-19'),
-        geo: 'US',
+        trendDate: new Date(),
+        geo: req.params.country,
     }, function (err, results) {
         if (err) {
             console.log('oh no error!', err);
         } else {
             console.log(results);
+            var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
+            for (var i = 0; i < arr.length; i++) {
+                // result.push(arr[i].title.query)
+                result.push(arr[i])
+            }
+            res.json(result)
         }
     });
 });
