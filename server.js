@@ -49,7 +49,7 @@ let query = {
 
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
 // will return a promise as in case OPTION 2
-app.get('/:country/:day', cors(), (req, res) => {
+app.get('/:country/:day/:test', cors(), (req, res) => {
     var result = [];
     googleTrends.dailyTrends({
         trendDate: new Date(),
@@ -71,7 +71,7 @@ app.get('/:country/:day', cors(), (req, res) => {
 
 
 // OPTION 2
-app.get('/:country/test', cors(), (req, res) => {
+app.get('/:country/:day', cors(), (req, res) => {
     try {
         var result = [];
         googleTrends.dailyTrends({ geo: req.params.country })
