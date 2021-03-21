@@ -52,7 +52,7 @@ let query = {
 app.get('/:country/:day', cors(), (req, res) => {
     var result = [];
     googleTrends.dailyTrends({
-        trendDate: '2021-03-21', // new Date()
+        trendDate: new Date(),
         geo: req.params.country,
     }, function (err, results) {
         if (err) {
