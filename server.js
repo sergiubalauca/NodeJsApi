@@ -180,3 +180,5 @@ const port = process.env.PORT || 4000;
 const server = app.listen(port, function () {
     console.log('Gsb server listening on port ' + port);
 });
+
+module.exports = app;
