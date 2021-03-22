@@ -18,41 +18,43 @@ app.use(bodyParser.json());
 // });
 
 //extra cors stuff with origins allowed
-var allowedOrigins = [
-    'http://localhost:8100',
-    'http://localhost:8101',
-    'http://localhost:4200',
-    '*'];
-app.use(cors({
-    origin: function (origin, callback) {
-        // allow requests with no origin 
-        // (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            var msg = 'The CORS policy for this site does not ' +
-                'allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    }
-}));
+// var allowedOrigins = [
+//     'http://localhost:8100',
+//     'http://localhost:8101',
+//     'http://localhost:4200',
+//     '*'];
+// app.use(cors({
+//     origin: function (origin, callback) {
+//         // allow requests with no origin 
+//         // (like mobile apps or curl requests)
+//         if (!origin) return callback(null, true);
+//         if (allowedOrigins.indexOf(origin) === -1) {
+//             var msg = 'The CORS policy for this site does not ' +
+//                 'allow access from the specified Origin.';
+//             return callback(new Error(msg), false);
+//         }
+//         return callback(null, true);
+//     }
+// }));
 
 // use JWT auth to secure the api 
 app.use(jwt());
+
+// complex calls requires options
 app.options('/:country/:day', cors());
 
 // api routes 
 app.use('/users', require('./users/users.controller'));
 app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 
-const HttpsProxyAgent = require('https-proxy-agent');
+// const HttpsProxyAgent = require('https-proxy-agent');
 
-let proxyAgent = new HttpsProxyAgent('http://proxy-host:8888/');
+// let proxyAgent = new HttpsProxyAgent('http://proxy-host:8888/');
 
-let query = {
-    keyword: 'Women\'s march',
-    agent: proxyAgent
-};
+// let query = {
+//     keyword: 'Women\'s march',
+//     agent: proxyAgent
+// };
 
 
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
