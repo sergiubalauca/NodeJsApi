@@ -62,7 +62,22 @@ app.get('/:country/:day', (req, res) => {
         } else {
             console.log('Raw result: ' + results);
 
-            this.scrapeHtmlContent('test');
+            const rp = require('request-promise');
+            const $ = require('cheerio');
+            const url = 'https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States';
+
+            // let text = document.getElementById('infoDiv0').textContent;
+
+            rp(url)
+                .then(function (results) {
+                    //success!
+                    console.log($('#infoDiv0', results).length);
+                    console.log($('#infoDiv0', results));
+                    // jsonContent = $('big > a', results);
+                })
+                .catch(function (err) {
+                    //handle error
+                });
 
             var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
             for (var i = 0; i < arr.length; i++) {
@@ -76,7 +91,7 @@ app.get('/:country/:day', (req, res) => {
 });
 
 var scrapeHtmlContent = function (urlAddress) {
-    var jsonContent = {};
+    var jsonContent;
 
     const rp = require('request-promise');
     const $ = require('cheerio');
@@ -87,6 +102,7 @@ var scrapeHtmlContent = function (urlAddress) {
             //success!
             console.log($('big > a', html).length);
             console.log($('big > a', html));
+            jsonContent = $('big > a', html);
         })
         .catch(function (err) {
             //handle error
