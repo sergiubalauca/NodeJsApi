@@ -9,31 +9,31 @@ const googleTrends = require('google-trends-api');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+// app.use(cors());
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Header", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+// app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Header", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
 
-// extra cors stuff with origins allowed
-// var allowedOrigins = ['http://localhost:8100',
-//                       'http://localhost:8101',
-//                       'http://localhost:4200'];
-// app.use(cors({
-//   origin: function(origin, callback){
-//     // allow requests with no origin 
-//     // (like mobile apps or curl requests)
-//     if(!origin) return callback(null, true);
-//     if(allowedOrigins.indexOf(origin) === -1){
-//       var msg = 'The CORS policy for this site does not ' +
-//                 'allow access from the specified Origin.';
-//       return callback(new Error(msg), false);
-//     }
-//     return callback(null, true);
-//   }
-// }));
+//extra cors stuff with origins allowed
+var allowedOrigins = ['http://localhost:81001',
+                      'http://localhost:8101',
+                      'http://localhost:4200'];
+app.use(cors({
+  origin: function(origin, callback){
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 // use JWT auth to secure the api 
 app.use(jwt());
@@ -64,13 +64,13 @@ app.get('/:country/:day', cors(), (req, res) => {
         if (err) {
             console.log('oh no error!', err);
         } else {
-            // console.log('Raw result: ' + results);
+            console.log('Raw result: ' + results);
             var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
             for (var i = 0; i < arr.length; i++) {
                 // result.push(arr[i].title.query)
                 result.push(arr[i])
             }
-            // console.log('end result: ' + result);
+            console.log('end result: ' + result);
             res.json(result)
         }
     });
