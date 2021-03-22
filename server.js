@@ -41,7 +41,7 @@ app.use(cors());
 app.use(jwt());
 
 // complex calls requires options
-app.options('/:country/:day', cors());
+// app.options('/:country/:day', cors());
 
 // api routes 
 app.use('/users', require('./users/users.controller'));
@@ -59,7 +59,7 @@ app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
 // will return a promise as in case OPTION 2
-app.get('/:country/:day', cors(), (req, res) => {
+app.get('/:country/:day', (req, res) => {
     var result = [];
     googleTrends.dailyTrends({
         trendDate: new Date(),
