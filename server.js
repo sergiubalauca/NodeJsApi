@@ -48,20 +48,19 @@ app.use(jwt());
 app.use('/users', require('./users/users.controller'));
 // app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 
-// const HttpsProxyAgent = require('https-proxy-agent');
-
-// let proxyAgent = new HttpsProxyAgent('http://proxy-host:8888/');
-
-// let query = {
-//     keyword: 'Women\'s march',
-//     agent: proxyAgent
-// };
-
-
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
 // will return a promise as in case OPTION 2
 app.get('/:country/:day', (req, res) => {
     var result = [];
+
+    googleTrends.interestOverTime({ keyword: ['Women\'s march', 'Trump Inauguration'] })
+        .then(function (results) {
+            console.log('These results are awesome', results);
+        })
+        .catch(function (err) {
+            console.error('Oh no there was an error', err);
+        });
+
     googleTrends.dailyTrends({
         trendDate: new Date(),
         geo: req.params.country,
