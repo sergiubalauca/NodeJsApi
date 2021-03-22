@@ -53,14 +53,6 @@ app.use('/users', require('./users/users.controller'));
 app.get('/:country/:day', (req, res) => {
     var result = [];
 
-    googleTrends.interestOverTime({ keyword: ['Women\'s march', 'Trump Inauguration'] })
-        .then(function (results) {
-            console.log('These results are awesome', results);
-        })
-        .catch(function (err) {
-            console.error('Oh no there was an error', err);
-        });
-
     googleTrends.dailyTrends({
         trendDate: new Date(),
         geo: req.params.country,
