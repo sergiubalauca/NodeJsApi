@@ -9,7 +9,7 @@ const googleTrends = require('google-trends-api');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.use(cors());
+app.use(cors());
 
 // app.use(function (req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
