@@ -39,7 +39,7 @@ app.use(cors({
 
 // use JWT auth to secure the api 
 app.use(jwt());
-app.options('/:country', cors());
+app.options('/:country/:day', cors());
 
 // api routes 
 app.use('/users', require('./users/users.controller'));
