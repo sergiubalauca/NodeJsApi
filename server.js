@@ -69,13 +69,13 @@ app.get('/:country/:day', (req, res) => {
             console.log('oh no error!', err);
         } else {
             console.log('Raw result: ' + results);
-            var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
-            for (var i = 0; i < arr.length; i++) {
-                // result.push(arr[i].title.query)
-                result.push(arr[i])
-            }
-            console.log('end result: ' + result);
-            res.json(result)
+            // var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
+            // for (var i = 0; i < arr.length; i++) {
+            //     // result.push(arr[i].title.query)
+            //     result.push(arr[i])
+            // }
+            // console.log('end result: ' + result);
+            // res.json(result)
         }
     });
 });
