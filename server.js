@@ -18,21 +18,23 @@ app.use(bodyParser.json());
 // });
 
 //extra cors stuff with origins allowed
-var allowedOrigins = ['http://localhost:81001',
-                      'http://localhost:8101',
-                      'http://localhost:4200'];
+var allowedOrigins = [
+    'http://localhost:8100',
+    'http://localhost:8101',
+    'http://localhost:4200',
+    '*'];
 app.use(cors({
-  origin: function(origin, callback){
-    // allow requests with no origin 
-    // (like mobile apps or curl requests)
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
-      var msg = 'The CORS policy for this site does not ' +
+    origin: function (origin, callback) {
+        // allow requests with no origin 
+        // (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            var msg = 'The CORS policy for this site does not ' +
                 'allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
     }
-    return callback(null, true);
-  }
 }));
 
 // use JWT auth to secure the api 
