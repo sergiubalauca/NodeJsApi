@@ -9,7 +9,7 @@ const googleTrends = require('google-trends-api');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.use(cors());
+app.use(cors());
 
 // app.use(function (req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
@@ -18,24 +18,24 @@ app.use(bodyParser.json());
 // });
 
 //extra cors stuff with origins allowed
-var allowedOrigins = [
-    'http://localhost:8100',
-    'http://localhost:8101',
-    'http://localhost:4200',
-    '*'];
-app.use(cors({
-    origin: function (origin, callback) {
-        // allow requests with no origin 
-        // (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            var msg = 'The CORS policy for this site does not ' +
-                'allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    }
-}));
+// var allowedOrigins = [
+//     'http://localhost:8100',
+//     'http://localhost:8101',
+//     'http://localhost:4200',
+//     '*'];
+// app.use(cors({
+//     origin: function (origin, callback) {
+//         // allow requests with no origin 
+//         // (like mobile apps or curl requests)
+//         if (!origin) return callback(null, true);
+//         if (allowedOrigins.indexOf(origin) === -1) {
+//             var msg = 'The CORS policy for this site does not ' +
+//                 'allow access from the specified Origin.';
+//             return callback(new Error(msg), false);
+//         }
+//         return callback(null, true);
+//     }
+// }));
 
 // use JWT auth to secure the api 
 app.use(jwt());
@@ -45,7 +45,7 @@ app.use(jwt());
 
 // api routes 
 app.use('/users', require('./users/users.controller'));
-app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
+// app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 
 // const HttpsProxyAgent = require('https-proxy-agent');
 
