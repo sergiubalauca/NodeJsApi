@@ -61,6 +61,9 @@ app.get('/:country/:day', (req, res) => {
             console.log('oh no error!', err);
         } else {
             console.log('Raw result: ' + results);
+
+            this.scrapeHtmlContent('test');
+
             var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
             for (var i = 0; i < arr.length; i++) {
                 // result.push(arr[i].title.query)
@@ -71,6 +74,27 @@ app.get('/:country/:day', (req, res) => {
         }
     });
 });
+
+var scrapeHtmlContent = function (urlAddress) {
+    var jsonContent = {};
+
+    const rp = require('request-promise');
+    const $ = require('cheerio');
+    const url = 'https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States';
+
+    rp(url)
+        .then(function (html) {
+            //success!
+            console.log($('big > a', html).length);
+            console.log($('big > a', html));
+        })
+        .catch(function (err) {
+            //handle error
+        });
+
+    return jsonContent;
+}
+
 
 
 // OPTION 2
