@@ -64,13 +64,13 @@ app.get('/:country/:day', cors(), (req, res) => {
         if (err) {
             console.log('oh no error!', err);
         } else {
-            console.log('Raw result: ' + results);
+            // console.log('Raw result: ' + results);
             var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
             for (var i = 0; i < arr.length; i++) {
                 // result.push(arr[i].title.query)
                 result.push(arr[i])
             }
-            console.log('end result: ' + result);
+            // console.log('end result: ' + result);
             res.json(result)
         }
     });
