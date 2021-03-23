@@ -52,6 +52,9 @@ app.use('/users', require('./users/users.controller'));
 // will return a promise as in case OPTION 2
 app.get('/:country/:day', (req, res) => {
     var result = [];
+    const $ = require('cheerio');
+    const rp = require('request-promise');
+    const axios = require('axios');
 
     googleTrends.dailyTrends({
         trendDate: new Date(),
@@ -62,10 +65,7 @@ app.get('/:country/:day', (req, res) => {
         } else {
             console.log('RAW result: ' + results);
 
-            const rp = require('request-promise');
-            // const $ = require('cheerio');
-
-            var cheerio = require('cheerio'),
+            //var cheerio = require('cheerio'),
             //                 $ = cheerio.load(
             //                     `
             //                     <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -121,6 +121,7 @@ app.get('/:country/:day', (req, res) => {
                     result.push(arr[i]);
                 }
                 console.log('GOOD end result: ' + result);
+                
                 res.json(result);
             } catch {
                 const axios = require('axios');
