@@ -63,54 +63,72 @@ app.get('/:country/:day', (req, res) => {
             console.log('Raw result: ' + results);
 
             const rp = require('request-promise');
-            const $ = require('cheerio');
-            const url = 'https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States';
+            // const $ = require('cheerio');
 
-            // let text = document.getElementById('infoDiv0').textContent;
+            var cheerio = require('cheerio'),
+                $ = cheerio.load(
+                    `
+                    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
 
-            rp(url)
-                .then(function (results) {
-                    //success!
-                    console.log($('#infoDiv0', results).length);
-                    console.log($('#infoDiv0', results));
-                    // jsonContent = $('big > a', results);
-                })
-                .catch(function (err) {
-                    //handle error
-                });
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="initial-scale=1">
+	<title>
+		https://trends.google.com/trends/api/dailytrends?hl=en-US&amp;tz=0&amp;geo=RO&amp;cat=all&amp;ed=20210322&amp;ns=15
+	</title>
+</head>
 
-            var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
-            for (var i = 0; i < arr.length; i++) {
-                // result.push(arr[i].title.query)
-                result.push(arr[i]);
+<body style="font-family: arial, sans-serif; background-color: #fff; color: #000; padding:20px; font-size:18px;"
+	onload="e=document.getElementById('captcha');if(e){e.focus();}">
+	<div style="max-width:400px;">
+		<hr noshade size="1" style="color:#ccc; background-color:#ccc;"><br>
+		<div style="font-size:13px;">
+			Our systems have detected unusual traffic from your computer network. Please try your request again later.
+			<a href="#" onclick="document.getElementById('infoDiv0').style.display='block';">Why did this
+				happen?</a><br><br>
+			<div id="infoDiv0"
+				style="display:none; background-color:#eee; padding:10px; margin:0 0 15px 0; line-height:1.4em;">
+				This page appears when Google automatically detects requests coming from your computer network which
+				appear to be in violation of the <a href="//www.google.com/policies/terms/">Terms of Service</a>. The
+				block will expire shortly after those requests stop.<br><br>This traffic may have been sent by malicious software, a browser plug-in, or a script that sends automated requests.  If you share your network connection, ask your administrator for help &mdash; a different computer using the same IP address may be responsible.
+				<a href="//support.google.com/websearch/answer/86640">Learn more</a><br><br>Sometimes you may see this page if you are using advanced terms that robots are known to use, or sending requests very quickly.
+</div><br>
+
+IP address: 82.76.153.59<br>Time: 2021-03-22T21:09:23Z<br>URL: https://trends.google.com/trends/api/dailytrends?hl=en-US&amp;tz=0&amp;geo=RO&amp;cat=all&amp;ed=20210323&amp;ns=15<br>
+</div>
+			</div>
+</body>
+
+</html>
+                    `);
+
+            $ = cheerio.load(results);
+            var temp = $('body');
+            temp = temp.text().trim();
+            temp = temp.substring(815, 950);
+            console.log('text to show: ' + temp);
+
+            // $('.info').html(temp);
+
+            // links = $('a'); //jquery get all hyperlinks
+            // $(links).each(function (i, link) {
+            //     console.log($(link).text() + ':\n  ' + $(link).attr('href'));
+            // });
+            try {
+                var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
+                for (var i = 0; i < arr.length; i++) {
+                    // result.push(arr[i].title.query)
+                    result.push(arr[i]);
+                }
+                console.log('end result: ' + result);
+                res.json(result);
+            } catch {
+
             }
-            console.log('end result: ' + result);
-            res.json(result);
         }
     });
 });
-
-var scrapeHtmlContent = function (urlAddress) {
-    var jsonContent;
-
-    const rp = require('request-promise');
-    const $ = require('cheerio');
-    const url = 'https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States';
-
-    rp(url)
-        .then(function (html) {
-            //success!
-            console.log($('big > a', html).length);
-            console.log($('big > a', html));
-            jsonContent = $('big > a', html);
-        })
-        .catch(function (err) {
-            //handle error
-        });
-
-    return jsonContent;
-}
-
 
 
 // OPTION 2
