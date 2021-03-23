@@ -132,7 +132,7 @@ app.get('/:country/:day', (req, res) => {
                         // $ = cheerio.load(response);
                     })
                     .catch(error => {
-                        console.log(error);
+                        //console.log(error);
                     });
 
                 //$ = cheerio.load(results);
