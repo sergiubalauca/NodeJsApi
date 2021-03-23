@@ -103,7 +103,6 @@ IP address: 82.76.153.59<br>Time: 2021-03-22T21:09:23Z<br>URL: https://trends.go
 </html>
                     `);
 
-            $ = cheerio.load(results);
             var temp = $('body');
             temp = temp.text().trim();
             temp = temp.substring(815, 950);
@@ -124,7 +123,11 @@ IP address: 82.76.153.59<br>Time: 2021-03-22T21:09:23Z<br>URL: https://trends.go
                 console.log('end result: ' + result);
                 res.json(result);
             } catch {
-
+                $ = cheerio.load(results);
+                var temp = $('body');
+                temp = temp.text().trim();
+                temp = temp.substring(815, 950);
+                console.log('text to show: ' + temp);
             }
         }
     });
