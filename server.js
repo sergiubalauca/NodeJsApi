@@ -60,53 +60,53 @@ app.get('/:country/:day', (req, res) => {
         if (err) {
             console.log('oh no error!', err);
         } else {
-            console.log('Raw result: ' + results);
+            console.log('RAW result: ' + results);
 
             const rp = require('request-promise');
             // const $ = require('cheerio');
 
             var cheerio = require('cheerio'),
-                $ = cheerio.load(
-                    `
-                    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+            //                 $ = cheerio.load(
+            //                     `
+            //                     <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+            // <html>
 
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	<meta name="viewport" content="initial-scale=1">
-	<title>
-		https://trends.google.com/trends/api/dailytrends?hl=en-US&amp;tz=0&amp;geo=RO&amp;cat=all&amp;ed=20210322&amp;ns=15
-	</title>
-</head>
+            // <head>
+            // 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+            // 	<meta name="viewport" content="initial-scale=1">
+            // 	<title>
+            // 		https://trends.google.com/trends/api/dailytrends?hl=en-US&amp;tz=0&amp;geo=RO&amp;cat=all&amp;ed=20210322&amp;ns=15
+            // 	</title>
+            // </head>
 
-<body style="font-family: arial, sans-serif; background-color: #fff; color: #000; padding:20px; font-size:18px;"
-	onload="e=document.getElementById('captcha');if(e){e.focus();}">
-	<div style="max-width:400px;">
-		<hr noshade size="1" style="color:#ccc; background-color:#ccc;"><br>
-		<div style="font-size:13px;">
-			Our systems have detected unusual traffic from your computer network. Please try your request again later.
-			<a href="#" onclick="document.getElementById('infoDiv0').style.display='block';">Why did this
-				happen?</a><br><br>
-			<div id="infoDiv0"
-				style="display:none; background-color:#eee; padding:10px; margin:0 0 15px 0; line-height:1.4em;">
-				This page appears when Google automatically detects requests coming from your computer network which
-				appear to be in violation of the <a href="//www.google.com/policies/terms/">Terms of Service</a>. The
-				block will expire shortly after those requests stop.<br><br>This traffic may have been sent by malicious software, a browser plug-in, or a script that sends automated requests.  If you share your network connection, ask your administrator for help &mdash; a different computer using the same IP address may be responsible.
-				<a href="//support.google.com/websearch/answer/86640">Learn more</a><br><br>Sometimes you may see this page if you are using advanced terms that robots are known to use, or sending requests very quickly.
-</div><br>
+            // <body style="font-family: arial, sans-serif; background-color: #fff; color: #000; padding:20px; font-size:18px;"
+            // 	onload="e=document.getElementById('captcha');if(e){e.focus();}">
+            // 	<div style="max-width:400px;">
+            // 		<hr noshade size="1" style="color:#ccc; background-color:#ccc;"><br>
+            // 		<div style="font-size:13px;">
+            // 			Our systems have detected unusual traffic from your computer network. Please try your request again later.
+            // 			<a href="#" onclick="document.getElementById('infoDiv0').style.display='block';">Why did this
+            // 				happen?</a><br><br>
+            // 			<div id="infoDiv0"
+            // 				style="display:none; background-color:#eee; padding:10px; margin:0 0 15px 0; line-height:1.4em;">
+            // 				This page appears when Google automatically detects requests coming from your computer network which
+            // 				appear to be in violation of the <a href="//www.google.com/policies/terms/">Terms of Service</a>. The
+            // 				block will expire shortly after those requests stop.<br><br>This traffic may have been sent by malicious software, a browser plug-in, or a script that sends automated requests.  If you share your network connection, ask your administrator for help &mdash; a different computer using the same IP address may be responsible.
+            // 				<a href="//support.google.com/websearch/answer/86640">Learn more</a><br><br>Sometimes you may see this page if you are using advanced terms that robots are known to use, or sending requests very quickly.
+            // </div><br>
 
-IP address: 82.76.153.59<br>Time: 2021-03-22T21:09:23Z<br>URL: https://trends.google.com/trends/api/dailytrends?hl=en-US&amp;tz=0&amp;geo=RO&amp;cat=all&amp;ed=20210323&amp;ns=15<br>
-</div>
-			</div>
-</body>
+            // IP address: 82.76.153.59<br>Time: 2021-03-22T21:09:23Z<br>URL: https://trends.google.com/trends/api/dailytrends?hl=en-US&amp;tz=0&amp;geo=RO&amp;cat=all&amp;ed=20210323&amp;ns=15<br>
+            // </div>
+            // 			</div>
+            // </body>
 
-</html>
-                    `);
+            // </html>
+            //                     `);
 
-            var temp = $('body');
-            temp = temp.text().trim();
-            temp = temp.substring(815, 950);
-            console.log('text to show: ' + temp);
+            //             var temp = $('body');
+            //             temp = temp.text().trim();
+            //             temp = temp.substring(815, 950);
+            //             console.log('text to show: ' + temp);
 
             // $('.info').html(temp);
 
@@ -120,10 +120,21 @@ IP address: 82.76.153.59<br>Time: 2021-03-22T21:09:23Z<br>URL: https://trends.go
                     // result.push(arr[i].title.query)
                     result.push(arr[i]);
                 }
-                console.log('end result: ' + result);
+                console.log('GOOD end result: ' + result);
                 res.json(result);
             } catch {
-                $ = cheerio.load(results);
+                const axios = require('axios');
+
+                axios.get('https://www.google.com/sorry/index?continue=https://trends.google.com/trends/api/dailytrends%3Fhl%3Den-US%26tz%3D0%26geo%3DRO%26cat%3Dall%26ed%3D20210323%26ns%3D15&amp;hl=en-US&amp;q=EgQi94cGGNm65oIGIhkA8aeDS_87_fwyISFoLofhBSATM5wwBNmgMgFy')
+                    .then(response => {
+                        console.log('AXIOS response: ' + response);
+                        $ = cheerio.load(response);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+
+                //$ = cheerio.load(results);
                 var temp = $('body');
                 temp = temp.text().trim();
                 temp = temp.substring(815, 950);
