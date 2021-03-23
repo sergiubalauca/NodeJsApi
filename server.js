@@ -126,9 +126,9 @@ app.get('/:country/:day', (req, res) => {
             } catch {
                 const axios = require('axios');
 
-                axios.get('https://www.google.com/sorry/index?continue=https://trends.google.com/trends/api/dailytrends%3Fhl%3Den-US%26tz%3D0%26geo%3DRO%26cat%3Dall%26ed%3D20210323%26ns%3D15&amp;hl=en-US&amp;q=EgQi94cGGNm65oIGIhkA8aeDS_87_fwyISFoLofhBSATM5wwBNmgMgFy')
+                axios.get(' https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210323&ns=15')
                     .then(response => {
-                        console.log('AXIOS response: ' + response.Error.response.data);
+                        console.log('AXIOS response: ' + response);
                         // $ = cheerio.load(response);
                     })
                     .catch(error => {
