@@ -128,7 +128,7 @@ app.get('/:country/:day', (req, res) => {
 
                 axios.get('https://www.google.com/sorry/index?continue=https://trends.google.com/trends/api/dailytrends%3Fhl%3Den-US%26tz%3D0%26geo%3DRO%26cat%3Dall%26ed%3D20210323%26ns%3D15&amp;hl=en-US&amp;q=EgQi94cGGNm65oIGIhkA8aeDS_87_fwyISFoLofhBSATM5wwBNmgMgFy')
                     .then(response => {
-                        console.log('AXIOS response: ' + response);
+                        console.log('AXIOS response: ' + response.Error.response.data);
                         $ = cheerio.load(response);
                     })
                     .catch(error => {
@@ -136,10 +136,10 @@ app.get('/:country/:day', (req, res) => {
                     });
 
                 //$ = cheerio.load(results);
-                var temp = $('body');
-                temp = temp.text().trim();
-                temp = temp.substring(815, 950);
-                console.log('text to show: ' + temp.Error.response.data);
+                // var temp = $('body');
+                // temp = temp.text().trim();
+                // temp = temp.substring(815, 950);
+                // console.log('text to show: ' + temp);
             }
         }
     });
