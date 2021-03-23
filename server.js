@@ -139,7 +139,7 @@ app.get('/:country/:day', (req, res) => {
                 var temp = $('body');
                 temp = temp.text().trim();
                 temp = temp.substring(815, 950);
-                console.log('text to show: ' + temp);
+                console.log('text to show: ' + temp.Error.response.data);
             }
         }
     });
