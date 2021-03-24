@@ -123,6 +123,26 @@ app.get('/:country/:day', (req, res) => {
                 //console.log('GOOD end result: ' + result);
 
                 res.json(result);
+
+                const axios = require('axios');
+                const fs = require('fs');
+
+                axios.get(' https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210323&ns=15')
+                    .then(response => {
+                        console.log('AXIOS response: ' + response);
+                        // $ = cheerio.load(response);
+                        
+                        fs.writeFile('2pac.txt', response, (err) => {
+                            // throws an error, you could also catch it here
+                            if (err) throw err;
+
+                            // success case, the file was saved
+                            console.log('Response saved!');
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             } catch {
                 const axios = require('axios');
 
