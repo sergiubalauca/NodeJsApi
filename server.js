@@ -60,58 +60,58 @@ app.get('/:country/:day/', (req, res) => {
     const path = 'response.txt' // where to save a file
     const pathRes = 'result.json';
 
-    var file = fs.createWriteStream(path);
+    // var file = fs.createWriteStream(path);
 
     const request = http.get(gTrendsUrl, function (response) {
         if (response.statusCode === 200) {
-            var file = fs.createWriteStream(path);
-            response.pipe(file);
+            // var file = fs.createWriteStream(path);
+            // response.pipe(file);
 
         }
         else{
-            console.log('err: ' + errorHandler.error);
+            console.log('ERROR in get from link: ' + errorHandler.error);
         }
-        request.setTimeout(60000, function () { // if after 60s file not downlaoded, we abort a request 
-            request.abort();
-        });
+        // request.setTimeout(60000, function () { // if after 60s file not downlaoded, we abort a request 
+        //     request.abort();
+        // });
     });
 
     /* Check if the file is created and filled before reading it */
     const checkTime = 1000;
 
-    const timerId1 = setInterval(() => {
-        const isExists = fs.existsSync(path, 'utf8')
-        if (isExists) {
-            // do something here
-            var data = fs.readFileSync(path, 'utf-8');
-            // console.log('data: ' + data.toString());
-            var newValue = data.substring(6, data.length);
+    // const timerId1 = setInterval(() => {
+    //     const isExists = fs.existsSync(path, 'utf8')
+    //     if (isExists) {
+    //         // do something here
+    //         var data = fs.readFileSync(path, 'utf-8');
+    //         // console.log('data: ' + data.toString());
+    //         var newValue = data.substring(6, data.length);
 
-            fs.writeFileSync(pathRes, newValue, 'utf-8');
+    //         fs.writeFileSync(pathRes, newValue, 'utf-8');
 
-            clearInterval(timerId1)
+    //         clearInterval(timerId1)
 
-        }
-    }, checkTime)
+    //     }
+    // }, checkTime)
 
-    const timerId2 = setInterval(() => {
-        const isExists = fs.existsSync(pathRes, 'utf8')
-        if (isExists) {
-            // do something here
-            var data = fs.readFileSync(pathRes, 'utf-8');
-            console.log('data: ' + data);
+    // const timerId2 = setInterval(() => {
+    //     const isExists = fs.existsSync(pathRes, 'utf8')
+    //     if (isExists) {
+    //         // do something here
+    //         var data = fs.readFileSync(pathRes, 'utf-8');
+    //         console.log('data: ' + data);
 
-            var arr = JSON.parse(data).default.trendingSearchesDays[req.params.day].trendingSearches
-            for (var i = 0; i < arr.length; i++) {
-                // result.push(arr[i].title.query)
-                result.push(arr[i]);
-            }
-            // console.log('result: ' + JSON.stringify(result));
-            res.json(result);
-            clearInterval(timerId2)
+    //         var arr = JSON.parse(data).default.trendingSearchesDays[req.params.day].trendingSearches
+    //         for (var i = 0; i < arr.length; i++) {
+    //             // result.push(arr[i].title.query)
+    //             result.push(arr[i]);
+    //         }
+    //         // console.log('result: ' + JSON.stringify(result));
+    //         res.json(result);
+    //         clearInterval(timerId2)
 
-        }
-    }, checkTime)
+    //     }
+    // }, checkTime)
 
 
 });
