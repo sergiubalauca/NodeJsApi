@@ -54,11 +54,69 @@ app.use(jwt());
 app.use('/users', require('./users/users.controller'));
 // app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 
-// OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
-// will return a promise as in case OPTION 2
+//OPTION 0
 app.get('/:country/:day', (req, res) => {
     var result = [];
+    const path = 'response.txt' // where to save a file
+    const pathRes = 'result.json';
 
+    var file = fs.createWriteStream(path);
+
+    const request = http.get(gTrendsUrl, function (response) {
+        if (response.statusCode === 200) {
+            var file = fs.createWriteStream(path);
+            response.pipe(file);
+
+        }
+        request.setTimeout(60000, function () { // if after 60s file not downlaoded, we abort a request 
+            request.abort();
+        });
+    });
+
+    /* Check if the file is created and filled before reading it */
+    const checkTime = 5000;
+
+    const timerId1 = setInterval(() => {
+        const isExists = fs.existsSync(path, 'utf8')
+        if (isExists) {
+            // do something here
+            var data = fs.readFileSync(path, 'utf-8');
+            // console.log('data: ' + data.toString());
+            var newValue = data.substring(6, data.length);
+
+            fs.writeFileSync(pathRes, newValue, 'utf-8');
+
+            clearInterval(timerId1)
+
+        }
+    }, checkTime)
+
+    const timerId2 = setInterval(() => {
+        const isExists = fs.existsSync(pathRes, 'utf8')
+        if (isExists) {
+            // do something here
+            var data = fs.readFileSync(pathRes, 'utf-8');
+            // console.log('data: ' + data);
+
+            var arr = JSON.parse(data).default.trendingSearchesDays[req.params.day].trendingSearches
+            for (var i = 0; i < arr.length; i++) {
+                // result.push(arr[i].title.query)
+                result.push(arr[i]);
+            }
+            console.log('result: ' + JSON.stringify(result));
+            res.json(result);
+            clearInterval(timerId2)
+
+        }
+    }, checkTime)
+
+
+});
+
+// OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
+// will return a promise as in case OPTION 2
+app.get('/:country/:day/:remove', (req, res) => {
+    var result = [];
 
     googleTrends.dailyTrends({
         trendDate: new Date(),
@@ -70,69 +128,13 @@ app.get('/:country/:day', (req, res) => {
             // console.log('RAW result: ' + results);
 
             try {
-                // var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
-                // for (var i = 0; i < arr.length; i++) {
-                //     // result.push(arr[i].title.query)
-                //     result.push(arr[i]);
-                // }
+                var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
+                for (var i = 0; i < arr.length; i++) {
+                    // result.push(arr[i].title.query)
+                    result.push(arr[i]);
+                }
 
-                // res.json(result);
-
-
-
-                const path = 'response.txt' // where to save a file
-                const pathRes = 'result.json';
-
-                var file = fs.createWriteStream(path);
-                
-                const request = http.get(gTrendsUrl, function (response) {
-                    if (response.statusCode === 200) {
-                        var file = fs.createWriteStream(path);
-                        response.pipe(file);
-
-                    }
-                    request.setTimeout(60000, function () { // if after 60s file not downlaoded, we abort a request 
-                        request.abort();
-                    });
-                });
-
-                /* Check if the file is created and filled before reading it */
-                const checkTime = 5000;
-
-                const timerId1 = setInterval(() => {
-                    const isExists = fs.existsSync(path, 'utf8')
-                    if (isExists) {
-                        // do something here
-                        var data = fs.readFileSync(path, 'utf-8');
-                        // console.log('data: ' + data.toString());
-                        var newValue = data.substring(6, data.length);
-
-                        fs.writeFileSync(pathRes, newValue, 'utf-8');
-
-                        clearInterval(timerId1)
-
-                    }
-                }, checkTime)
-
-                const timerId2 = setInterval(() => {
-                    const isExists = fs.existsSync(pathRes, 'utf8')
-                    if (isExists) {
-                        // do something here
-                        var data = fs.readFileSync(pathRes, 'utf-8');
-                        // console.log('data: ' + data);
-
-                        var arr = JSON.parse(data).default.trendingSearchesDays[req.params.day].trendingSearches
-                        for (var i = 0; i < arr.length; i++) {
-                            // result.push(arr[i].title.query)
-                            result.push(arr[i]);
-                        }
-                        console.log('result: ' + JSON.stringify(result));
-                        res.json(result);
-                        clearInterval(timerId2)
-
-                    }
-                }, checkTime)
-
+                res.json(result);
             } catch (error) {
                 // const axios = require('axios');
 
