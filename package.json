@@ -1,12 +1,7 @@
 {
     "name": "node-jwt-authentication-api",
     "version": "1.0.0",
-    "description": "NodeJS JWT Authentication API",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/cornflourblue/node-jwt-authentication-api.git"
-    },
+    "description": "NodeJS JWT Authentication + gTrends API",
     "scripts": {
         "start": "node ./server.js",
         "start:dev": "nodemon ./server.js"
@@ -18,7 +13,7 @@
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "express-jwt": "^6.0.0",
-        "google-trends-api": "^4.9.2",
+        "google-trends-api": "^4.9.0",
         "https-proxy-agent": "^5.0.0",
         "jsonwebtoken": "^8.5.1",
         "mongodb": "^3.6.5",
@@ -32,7 +27,6 @@
         "dotenv": "^8.2.0"
     },
     "devDependencies": {
-        
         "nodemon": "^2.0.7",
         "typescript": "^4.2.3"
     }
