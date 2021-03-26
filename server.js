@@ -119,14 +119,14 @@ app.get('/:country/:day', (req, res) => {
                     if (isExists) {
                         // do something here
                         var data = fs.readFileSync(pathRes, 'utf-8');
-                        console.log('data: ' + data.toString());
+                        // console.log('data: ' + data);
 
                         var arr = JSON.parse(data).default.trendingSearchesDays[req.params.day].trendingSearches
                         for (var i = 0; i < arr.length; i++) {
                             // result.push(arr[i].title.query)
                             result.push(arr[i]);
                         }
-
+                        console.log('result: ' + JSON.stringify(result));
                         res.json(result);
                         clearInterval(timerId2)
 
