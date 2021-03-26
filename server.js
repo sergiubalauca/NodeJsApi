@@ -84,7 +84,7 @@ app.get('/:country/:day', (req, res) => {
                 const pathRes = 'result.json';
 
                 var file = fs.createWriteStream(path);
-
+                
                 const request = http.get(gTrendsUrl, function (response) {
                     if (response.statusCode === 200) {
                         var file = fs.createWriteStream(path);
@@ -97,7 +97,7 @@ app.get('/:country/:day', (req, res) => {
                 });
 
                 /* Check if the file is created and filled before reading it */
-                const checkTime = 3000;
+                const checkTime = 5000;
 
                 const timerId1 = setInterval(() => {
                     const isExists = fs.existsSync(path, 'utf8')
