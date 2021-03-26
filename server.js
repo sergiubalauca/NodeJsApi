@@ -272,7 +272,7 @@ app.get('/:region/:keyword', async (req, res) => {
 // app.use('/todos', require('./ToDos/todosApi'));
 
 // global error handler
-app.use(errorHandler);
+//app.use(errorHandler); ----------------------------
 
 // start server
 // const port = process.env.NODE_ENV === 'production' ? 80 : 4000;
