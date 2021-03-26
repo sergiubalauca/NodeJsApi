@@ -130,7 +130,7 @@ app.get('/:country/:day/:remove', (req, res) => {
 
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
 // will return a promise as in case OPTION 2
-app.get('/:country/:day/:remove', async (req, res) => {
+app.get('/:country/:day/', async (req, res) => {
     try {
         var result = [];
 
@@ -180,7 +180,7 @@ app.get('/:country/:day/:remove', async (req, res) => {
 
 
 // OPTION 2
-app.get('/:country/:day', async (req, res) => {
+app.get('/:country', async (req, res) => {
     try {
         var result = []
         await googleTrends.dailyTrends({
