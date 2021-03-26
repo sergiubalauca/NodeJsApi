@@ -55,7 +55,7 @@ app.use('/users', require('./users/users.controller'));
 // app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 
 //OPTION 0
-app.get('/:country/:day/:remove', (req, res) => {
+app.get('/:country/:day/', (req, res) => {
     var result = [];
     const path = 'response.txt' // where to save a file
     const pathRes = 'result.json';
@@ -77,7 +77,7 @@ app.get('/:country/:day/:remove', (req, res) => {
     });
 
     /* Check if the file is created and filled before reading it */
-    const checkTime = 5000;
+    const checkTime = 1000;
 
     const timerId1 = setInterval(() => {
         const isExists = fs.existsSync(path, 'utf8')
@@ -118,7 +118,7 @@ app.get('/:country/:day/:remove', (req, res) => {
 
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
 // will return a promise as in case OPTION 2
-app.get('/:country/:day/', (req, res) => {
+app.get('/:country/:day/:remove', (req, res) => {
     var result = [];
 
     googleTrends.dailyTrends({
