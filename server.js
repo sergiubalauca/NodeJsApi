@@ -1,4 +1,5 @@
 ﻿require('rootpath')();
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -12,11 +13,21 @@ const rp = require('request-promise');
 const axios = require('axios');
 const fs = require('fs');
 var mongo = require('mongodb');
+const mongoose = require('mongoose');
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+console.log('DB URL: ' + process.env.DATABASE_URL);
+// app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(cors());
 app.options('*', cors());
+
+
+const uri = "mongodb+srv://g_sergiu:$erg!u@123@cluster0.ayjsc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on('error', (error) => console.error(error));
+db.once('open', () => console.log('Database connected!'));
+
 
 const gTrendsUrl = 'https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210326&ns=15';
 // app.use(function (req, res, next) {
@@ -61,7 +72,7 @@ app.get('/:country/:day/:remove', (req, res) => {
     const path = 'response.txt' // where to save a file
     const pathRes = 'result.json';
 
-     var file = fs.createWriteStream(path);
+    var file = fs.createWriteStream(path);
 
     const request = http.get(gTrendsUrl, function (response) {
         if (response.statusCode === 200) {
@@ -69,7 +80,7 @@ app.get('/:country/:day/:remove', (req, res) => {
             response.pipe(file);
 
         }
-        else{
+        else {
             console.log('ERROR in get from link: ' + response);
             var file = fs.createWriteStream(path);
             response.pipe(file);
@@ -80,7 +91,7 @@ app.get('/:country/:day/:remove', (req, res) => {
     });
 
     /* Check if the file is created and filled before reading it */
-    const checkTime = 2000;
+    const checkTime = 1000;
 
     const timerId1 = setInterval(() => {
         const isExists = fs.existsSync(path, 'utf8')
@@ -102,7 +113,7 @@ app.get('/:country/:day/:remove', (req, res) => {
         if (isExists) {
             // do something here
             var data = fs.readFileSync(pathRes, 'utf-8');
-            console.log('data: ' + data);
+            // console.log('data: ' + data);
 
             var arr = JSON.parse(data).default.trendingSearchesDays[req.params.day].trendingSearches
             for (var i = 0; i < arr.length; i++) {
@@ -119,47 +130,52 @@ app.get('/:country/:day/:remove', (req, res) => {
 
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
 // will return a promise as in case OPTION 2
-app.get('/:country/:day/', (req, res) => {
-    var result = [];
+app.get('/:country/:day/', async (req, res) => {
+    try {
+        var result = [];
 
-    googleTrends.dailyTrends({
-        trendDate: new Date(),
-        geo: req.params.country,
-    }, function (err, results) {
-        if (err) {
-            console.log('oh no error!', err);
-        } else {
-            console.log('RAW result: ' + results);
+        await googleTrends.dailyTrends({
+            trendDate: new Date(req.params.day),
+            geo: req.params.country,
+        }, function (err, results) {
+            if (err) {
+                console.log('oh no error!', err);
+            } else {
+                // console.log('RAW result: ' + results);
+                console.log('Sending results for day: ' + req.params.day);
+                try {
+                    var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
+                    for (var i = 0; i < arr.length; i++) {
+                        // result.push(arr[i].title.query)
+                        result.push(arr[i]);
+                    }
 
-            try {
-                var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
-                for (var i = 0; i < arr.length; i++) {
-                    // result.push(arr[i].title.query)
-                    result.push(arr[i]);
+                    res.json(result);
+                } catch (error) {
+                    // const axios = require('axios');
+
+                    // axios.get(' https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210323&ns=15')
+                    //     .then(response => {
+                    //         console.log('AXIOS response: ' + JSON.stringify(response));
+                    //         // $ = cheerio.load(response);
+                    //     })
+                    //     .catch(error => {
+                    //         console.log(error);
+                    //     });
+
+                    //$ = cheerio.load(results);
+                    // var temp = $('body');
+                    // temp = temp.text().trim();
+                    // temp = temp.substring(815, 950);
+                    // console.log('text to show: ' + temp);
+                    console.log('THE ERROR: ' + error);
                 }
-
-                res.json(result);
-            } catch (error) {
-                // const axios = require('axios');
-
-                // axios.get(' https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210323&ns=15')
-                //     .then(response => {
-                //         console.log('AXIOS response: ' + JSON.stringify(response));
-                //         // $ = cheerio.load(response);
-                //     })
-                //     .catch(error => {
-                //         console.log(error);
-                //     });
-
-                //$ = cheerio.load(results);
-                // var temp = $('body');
-                // temp = temp.text().trim();
-                // temp = temp.substring(815, 950);
-                // console.log('text to show: ' + temp);
-                console.log('THE ERROR: ' + error);
             }
-        }
-    });
+        });
+    }
+    catch (err) {
+        console.log(err)
+    }
 });
 
 
