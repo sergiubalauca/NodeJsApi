@@ -128,7 +128,7 @@ app.get('/:country/:day/', (req, res) => {
         if (err) {
             console.log('oh no error!', err);
         } else {
-            // console.log('RAW result: ' + results);
+            console.log('RAW result: ' + results);
 
             try {
                 var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
