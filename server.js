@@ -16,7 +16,7 @@ var mongo = require('mongodb');
 const mongoose = require('mongoose');
 
 console.log('DB URL: ' + process.env.DATABASE_URL);
-// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(express.json());
 app.use(cors());
 app.options('*', cors());
