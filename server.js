@@ -127,39 +127,40 @@ app.get('/:country/:day', (req, res) => {
                 const axios = require('axios');
                 const fs = require('fs');
 
-                axios.get(' https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210323&ns=15')
+                axios.get('https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210326&ns=15')
                     .then(response => {
                         console.log('AXIOS response: ' + response);
                         // $ = cheerio.load(response);
                         
-                        fs.writeFile('2pac.txt', response, (err) => {
-                            // throws an error, you could also catch it here
-                            if (err) throw err;
+                        // fs.writeFile('2pac.txt', response, (err) => {
+                        //     // throws an error, you could also catch it here
+                        //     if (err) throw err;
 
-                            // success case, the file was saved
-                            console.log('Response saved!');
-                        });
+                        //     // success case, the file was saved
+                        //     console.log('Response saved!');
+                        // });
                     })
                     .catch(error => {
                         console.log(error);
                     });
-            } catch {
-                const axios = require('axios');
+            } catch(error) {
+                // const axios = require('axios');
 
-                axios.get(' https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210323&ns=15')
-                    .then(response => {
-                        console.log('AXIOS response: ' + JSON.stringify(response));
-                        // $ = cheerio.load(response);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                // axios.get(' https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210323&ns=15')
+                //     .then(response => {
+                //         console.log('AXIOS response: ' + JSON.stringify(response));
+                //         // $ = cheerio.load(response);
+                //     })
+                //     .catch(error => {
+                //         console.log(error);
+                //     });
 
                 //$ = cheerio.load(results);
                 // var temp = $('body');
                 // temp = temp.text().trim();
                 // temp = temp.substring(815, 950);
                 // console.log('text to show: ' + temp);
+                console.log('THE ERROR: ' + error);
             }
         }
     });
