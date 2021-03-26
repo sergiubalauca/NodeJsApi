@@ -104,7 +104,7 @@ app.get('/:country/:day', (req, res) => {
                 result.push(arr[i]);
             }
             console.log('result: ' + JSON.stringify(result));
-            res.json(result);
+            // res.json(result);
             clearInterval(timerId2)
 
         }
