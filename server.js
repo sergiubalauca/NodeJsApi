@@ -6,12 +6,18 @@ const bodyParser = require('body-parser');
 const jwt = require('_helpers/jwt');
 const errorHandler = require('_helpers/error-handler');
 const googleTrends = require('google-trends-api');
+const http = require('https');
+const $ = require('cheerio');
+const rp = require('request-promise');
+const axios = require('axios');
+const fs = require('fs');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 app.options('*', cors());
 
+const gTrendsUrl = 'https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210326&ns=15';
 // app.use(function (req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
 //     res.header("Access-Control-Allow-Header", "Origin, X-Requested-With, Content-Type, Accept");
@@ -52,9 +58,7 @@ app.use('/users', require('./users/users.controller'));
 // will return a promise as in case OPTION 2
 app.get('/:country/:day', (req, res) => {
     var result = [];
-    const $ = require('cheerio');
-    const rp = require('request-promise');
-    const axios = require('axios');
+
 
     googleTrends.dailyTrends({
         trendDate: new Date(),
@@ -63,87 +67,73 @@ app.get('/:country/:day', (req, res) => {
         if (err) {
             console.log('oh no error!', err);
         } else {
-            console.log('RAW result: ' + results);
+            // console.log('RAW result: ' + results);
 
-            //var cheerio = require('cheerio'),
-            //                 $ = cheerio.load(
-            //                     `
-            //                     <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-            // <html>
-
-            // <head>
-            // 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-            // 	<meta name="viewport" content="initial-scale=1">
-            // 	<title>
-            // 		https://trends.google.com/trends/api/dailytrends?hl=en-US&amp;tz=0&amp;geo=RO&amp;cat=all&amp;ed=20210322&amp;ns=15
-            // 	</title>
-            // </head>
-
-            // <body style="font-family: arial, sans-serif; background-color: #fff; color: #000; padding:20px; font-size:18px;"
-            // 	onload="e=document.getElementById('captcha');if(e){e.focus();}">
-            // 	<div style="max-width:400px;">
-            // 		<hr noshade size="1" style="color:#ccc; background-color:#ccc;"><br>
-            // 		<div style="font-size:13px;">
-            // 			Our systems have detected unusual traffic from your computer network. Please try your request again later.
-            // 			<a href="#" onclick="document.getElementById('infoDiv0').style.display='block';">Why did this
-            // 				happen?</a><br><br>
-            // 			<div id="infoDiv0"
-            // 				style="display:none; background-color:#eee; padding:10px; margin:0 0 15px 0; line-height:1.4em;">
-            // 				This page appears when Google automatically detects requests coming from your computer network which
-            // 				appear to be in violation of the <a href="//www.google.com/policies/terms/">Terms of Service</a>. The
-            // 				block will expire shortly after those requests stop.<br><br>This traffic may have been sent by malicious software, a browser plug-in, or a script that sends automated requests.  If you share your network connection, ask your administrator for help &mdash; a different computer using the same IP address may be responsible.
-            // 				<a href="//support.google.com/websearch/answer/86640">Learn more</a><br><br>Sometimes you may see this page if you are using advanced terms that robots are known to use, or sending requests very quickly.
-            // </div><br>
-
-            // IP address: 82.76.153.59<br>Time: 2021-03-22T21:09:23Z<br>URL: https://trends.google.com/trends/api/dailytrends?hl=en-US&amp;tz=0&amp;geo=RO&amp;cat=all&amp;ed=20210323&amp;ns=15<br>
-            // </div>
-            // 			</div>
-            // </body>
-
-            // </html>
-            //                     `);
-
-            //             var temp = $('body');
-            //             temp = temp.text().trim();
-            //             temp = temp.substring(815, 950);
-            //             console.log('text to show: ' + temp);
-
-            // $('.info').html(temp);
-
-            // links = $('a'); //jquery get all hyperlinks
-            // $(links).each(function (i, link) {
-            //     console.log($(link).text() + ':\n  ' + $(link).attr('href'));
-            // });
             try {
-                var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
-                for (var i = 0; i < arr.length; i++) {
-                    // result.push(arr[i].title.query)
-                    result.push(arr[i]);
-                }
-                //console.log('GOOD end result: ' + result);
+                // var arr = JSON.parse(results).default.trendingSearchesDays[req.params.day].trendingSearches
+                // for (var i = 0; i < arr.length; i++) {
+                //     // result.push(arr[i].title.query)
+                //     result.push(arr[i]);
+                // }
 
-                res.json(result);
+                // res.json(result);
 
-                const axios = require('axios');
-                const fs = require('fs');
 
-                axios.get('https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210326&ns=15')
-                    .then(response => {
-                        console.log('AXIOS response: ' + response);
-                        // $ = cheerio.load(response);
-                        
-                        // fs.writeFile('2pac.txt', response, (err) => {
-                        //     // throws an error, you could also catch it here
-                        //     if (err) throw err;
 
-                        //     // success case, the file was saved
-                        //     console.log('Response saved!');
-                        // });
-                    })
-                    .catch(error => {
-                        console.log(error);
+                const path = 'response.txt' // where to save a file
+                const pathRes = 'result.json';
+
+                var file = fs.createWriteStream(path);
+
+                const request = http.get(gTrendsUrl, function (response) {
+                    if (response.statusCode === 200) {
+                        var file = fs.createWriteStream(path);
+                        response.pipe(file);
+
+                    }
+                    request.setTimeout(60000, function () { // if after 60s file not downlaoded, we abort a request 
+                        request.abort();
                     });
-            } catch(error) {
+                });
+
+                /* Check if the file is created and filled before reading it */
+                const checkTime = 3000;
+
+                const timerId1 = setInterval(() => {
+                    const isExists = fs.existsSync(path, 'utf8')
+                    if (isExists) {
+                        // do something here
+                        var data = fs.readFileSync(path, 'utf-8');
+                        // console.log('data: ' + data.toString());
+                        var newValue = data.substring(6, data.length);
+
+                        fs.writeFileSync(pathRes, newValue, 'utf-8');
+
+                        clearInterval(timerId1)
+
+                    }
+                }, checkTime)
+
+                const timerId2 = setInterval(() => {
+                    const isExists = fs.existsSync(pathRes, 'utf8')
+                    if (isExists) {
+                        // do something here
+                        var data = fs.readFileSync(pathRes, 'utf-8');
+                        console.log('data: ' + data.toString());
+
+                        var arr = JSON.parse(data).default.trendingSearchesDays[req.params.day].trendingSearches
+                        for (var i = 0; i < arr.length; i++) {
+                            // result.push(arr[i].title.query)
+                            result.push(arr[i]);
+                        }
+
+                        res.json(result);
+                        clearInterval(timerId2)
+
+                    }
+                }, checkTime)
+
+            } catch (error) {
                 // const axios = require('axios');
 
                 // axios.get(' https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210323&ns=15')
