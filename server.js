@@ -130,7 +130,7 @@ app.get('/:country/:day/:remove', (req, res) => {
 
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
 // will return a promise as in case OPTION 2
-app.get('/:country/:day/', async (req, res) => {
+app.get('/:country/:day/:remove', async (req, res) => {
     try {
         var result = [];
 
@@ -180,23 +180,23 @@ app.get('/:country/:day/', async (req, res) => {
 
 
 // OPTION 2
-app.get('/:country/:day/:test', cors(), (req, res) => {
+app.get('/:country/:day', async (req, res) => {
     try {
-        var result = [];
-        googleTrends.dailyTrends({ geo: req.params.country })
-            .then(function (results) {
-                console.log('results are: ' + results);
-                var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
-                for (var i = 0; i < arr.length; i++) {
-                    // result.push(arr[i].title.query)
-                    result.push(arr[i])
-                }
-                res.json(result)
-            })
-        console.log(result);
+        var result = []
+        await googleTrends.dailyTrends({
+            geo: req.params.country
+        }).then(function(results) {
+            var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
+            for (var i = 0; i < arr.length; i++) {
+                result.push(arr[i].title.query)
+            }
+            res.json(result)
+        })
         //res.json({'trend1':trend1,'trend2':trend2})
-    } catch (err) { console.log('ERROR in gTrends: ' + err) }
-});
+    } catch (err) {
+        console.log(err)
+    }
+})
 
 app.get("/:keyword/:keyword2", async (req, res) => {
     try {
