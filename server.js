@@ -56,7 +56,7 @@ app.use('/users', require('./users/users.controller'));
 // app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 
 //OPTION 0
-app.get('/:country/:day/', (req, res) => {
+app.get('/:country/:day/:remove', (req, res) => {
     var result = [];
     const path = 'response.txt' // where to save a file
     const pathRes = 'result.json';
@@ -119,7 +119,7 @@ app.get('/:country/:day/', (req, res) => {
 
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
 // will return a promise as in case OPTION 2
-app.get('/:country/:day/:remove', (req, res) => {
+app.get('/:country/:day/', (req, res) => {
     var result = [];
 
     googleTrends.dailyTrends({
