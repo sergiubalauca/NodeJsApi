@@ -69,7 +69,7 @@ app.get('/:country/:day/', (req, res) => {
 
         }
         else{
-            console.log('ERROR in get from link: ' + response;
+            console.log('ERROR in get from link: ' + response);
         }
         // request.setTimeout(60000, function () { // if after 60s file not downlaoded, we abort a request 
         //     request.abort();
