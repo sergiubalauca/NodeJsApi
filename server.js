@@ -68,6 +68,9 @@ app.get('/:country/:day', (req, res) => {
             response.pipe(file);
 
         }
+        else{
+            console.log('err: ' + errorHandler.error);
+        }
         request.setTimeout(60000, function () { // if after 60s file not downlaoded, we abort a request 
             request.abort();
         });
@@ -104,7 +107,7 @@ app.get('/:country/:day', (req, res) => {
                 result.push(arr[i]);
             }
             // console.log('result: ' + JSON.stringify(result));
-            res.json(data);
+            res.json(result);
             clearInterval(timerId2)
 
         }
