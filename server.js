@@ -15,14 +15,13 @@ const fs = require('fs');
 var mongo = require('mongodb');
 const mongoose = require('mongoose');
 
-console.log('DB URL: ' + process.env.DATABASE_URL);
+console.log('DB URL: ' + process.env.MONGODB_URI);
 // app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 app.options('*', cors());
 
 
-const uri = "mongodb+srv://g_sergiu:$erg!u@123@cluster0.ayjsc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
