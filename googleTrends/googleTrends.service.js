@@ -16,7 +16,7 @@ async function getGoogleTrends(day, country) {
             if (err) {
                 console.log('oh no error!', err);
             } else {
-                console.log('RAW result: ' + results);
+                //console.log('RAW result: ' + results);
                 console.log('Sending results for day: ' + day + ' in service');
                 try {
                     var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
@@ -26,7 +26,7 @@ async function getGoogleTrends(day, country) {
 
                     // res.json(result);
                     // console.log('RAW result: ' + result.length);
-                    return json(result);
+                    //return json(result);
                 } catch (error) {
                     console.log('THE ERROR: ' + error);
                 }
