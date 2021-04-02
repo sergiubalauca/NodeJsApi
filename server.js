@@ -60,7 +60,42 @@ app.use(jwt());
 
 // api routes 
 app.use('/users', require('./users/users.controller'));
-app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
+//app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
+
+
+// OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
+// will return a promise as in case OPTION 2
+app.get('/:country/:day/', async (req, res) => {
+    try {
+        var result = [];
+
+        await googleTrends.dailyTrends({
+            trendDate: new Date(req.params.day),
+            geo: req.params.country,
+        }, function (err, results) {
+            if (err) {
+                console.log('oh no error!', err);
+            } else {
+                console.log('RAW result: ' + results);
+                console.log('Sending results for day: ' + req.params.day);
+                try {
+                    var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
+                    for (var i = 0; i < arr.length; i++) {
+                        // result.push(arr[i].title.query)
+                        result.push(arr[i]);
+                    }
+
+                    res.json(result);
+                } catch (error) {
+                    console.log('THE ERROR: ' + error);
+                }
+            }
+        });
+    }
+    catch (err) {
+        console.log(err)
+    }
+});
 
 // global error handler
 app.use(errorHandler);
