@@ -21,12 +21,22 @@ app.use(express.json());
 app.use(cors());
 app.options('*', cors());
 
+// use JWT auth to secure the api 
+app.use(jwt());
 
+// api routes 
+app.use('/users', require('./users/users.controller'));
+app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
+
+// global error handler
+app.use(errorHandler);
+
+/* === connect to Mongo DB === */
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Database connected!'));
-
+/* === end connect to Mongo DB === */
 
 const gTrendsUrl = 'https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=0&geo=RO&cat=all&ed=20210326&ns=15';
 // app.use(function (req, res, next) {
@@ -54,14 +64,6 @@ const gTrendsUrl = 'https://trends.google.com/trends/api/dailytrends?hl=en-US&tz
 //         return callback(null, true);
 //     }
 // }));
-
-// use JWT auth to secure the api 
-app.use(jwt());
-
-// api routes 
-app.use('/users', require('./users/users.controller'));
-app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
-
 
 // OPTION 1 with second param in googleTrends method as a callback function. Otherwise, it
 // will return a promise as in case OPTION 2
@@ -97,8 +99,7 @@ app.use('/googleTrends', require('./googleTrends/googleTrends.controller'));
 //     }
 // });
 
-// global error handler
-app.use(errorHandler);
+
 
 // start server
 // const port = process.env.NODE_ENV === 'production' ? 80 : 4000;
