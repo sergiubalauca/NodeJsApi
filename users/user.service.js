@@ -16,8 +16,7 @@ const users = [
 
 module.exports = {
     authenticate,
-    getAll,
-    getGoogleTrends
+    getAll
 };
 
 async function authenticate({ username, password }) {
@@ -36,16 +35,6 @@ async function authenticate({ username, password }) {
 
 async function getAll() {
     return users.map(u => omitPassword(u));
-}
-
-async function getGoogleTrends() {
-    return googleTrends.interestOverTime({ keyword: 'Women\'s march' })
-        .then(function (results) {
-            console.log('These results are awesome', results);
-        })
-        .catch(function (err) {
-            console.error('Oh no there was an error', err);
-        });
 }
 
 // helper functions

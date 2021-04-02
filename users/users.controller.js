@@ -5,7 +5,6 @@ const userService = require('./user.service');
 // routes
 router.post('/authenticate', authenticate);
 router.get('/', getAll);
-router.get('/gtrends', getGoogleTrends);
 
 module.exports = router;
 
@@ -21,8 +20,3 @@ function getAll(req, res, next) {
         .catch(next);
 }
 
-function getGoogleTrends(req, res, next) {
-    userService.getGoogleTrends()
-        .then(users => res.json(users))
-        .catch(next);
-}

@@ -154,3 +154,137 @@
 //     }
 //   }
 /* ***********************  END Daily Trends *******************************/
+//OPTION 0
+// app.get('/:country/:day/:remove/:doubleRemove', (req, res) => {
+//     var result = [];
+//     const path = 'response.txt' // where to save a file
+//     const pathRes = 'result.json';
+
+//     var file = fs.createWriteStream(path);
+
+//     const request = http.get(gTrendsUrl, function (response) {
+//         if (response.statusCode === 200) {
+//             var file = fs.createWriteStream(path);
+//             response.pipe(file);
+
+//         }
+//         else {
+//             console.log('ERROR in get from link: ' + response);
+//             var file = fs.createWriteStream(path);
+//             response.pipe(file);
+//         }
+//         // request.setTimeout(60000, function () { // if after 60s file not downlaoded, we abort a request 
+//         //     request.abort();
+//         // });
+//     });
+
+//     /* Check if the file is created and filled before reading it */
+//     const checkTime = 1000;
+
+//     const timerId1 = setInterval(() => {
+//         const isExists = fs.existsSync(path, 'utf8')
+//         if (isExists) {
+//             // do something here
+//             var data = fs.readFileSync(path, 'utf-8');
+//             // console.log('data: ' + data.toString());
+//             var newValue = data.substring(6, data.length);
+
+//             fs.writeFileSync(pathRes, newValue, 'utf-8');
+
+//             clearInterval(timerId1)
+
+//         }
+//     }, checkTime)
+
+//     const timerId2 = setInterval(() => {
+//         const isExists = fs.existsSync(pathRes, 'utf8')
+//         if (isExists) {
+//             // do something here
+//             var data = fs.readFileSync(pathRes, 'utf-8');
+//             // console.log('data: ' + data);
+
+//             var arr = JSON.parse(data).default.trendingSearchesDays[req.params.day].trendingSearches
+//             for (var i = 0; i < arr.length; i++) {
+//                 // result.push(arr[i].title.query)
+//                 result.push(arr[i]);
+//             }
+//             // console.log('result: ' + JSON.stringify(result));
+//             res.json(result);
+//             clearInterval(timerId2)
+
+//         }
+//     }, checkTime)
+// });
+// =================================================================================
+// app.get("/:keyword/:keyword2", async (req, res) => {
+//     try {
+//         //console.log('reached')	        
+//         var result = [];
+//         var result2 = [];
+//         var result3 = [];
+
+//         googleTrends.interestOverTime({ keyword: req.params.keyword })
+//             .then(function (results) {
+//                 // console.log((JSON.parse(results).default.timelineData[0]));	
+//                 JSON.parse(results).default.timelineData.map((data, i) => {
+//                     result.push({
+//                         'date': data.formattedTime,
+//                         'value': data.value[0]
+//                     })
+//                 })
+//             }).then(function () {
+//                 googleTrends.interestOverTime({ keyword: req.params.keyword2 }).then(function (results) {	                        // console.log((JSON.parse(results).default.timelineData[0]));	
+//                     JSON.parse(results).default.timelineData.map((data, i) => {
+//                         result2.push({ 'date': data.formattedTime, 'value': data.value[0] })
+//                     })
+//                 }).then(function () {
+//                     googleTrends.interestOverTime({ keyword: req.params.keyword + " " + req.params.keyword2 })
+//                         .then(function (results) {
+//                             // console.log((JSON.parse(results).default.timelineData[0]));	
+//                             JSON.parse(results).default.timelineData.map((data, i) => {
+//                                 result3.push({
+//                                     'date': data.formattedTime,
+//                                     'value': data.value[0]
+//                                 })
+//                             })
+//                             var final = new Array(result.length + 1);
+//                             final[0] = new Array(4);
+//                             final[0][0] = "Timeline";
+//                             final[0][1] = req.params.keyword;
+//                             final[0][2] = req.params.keyword2
+//                             final[0][3] = req.params.keyword + " " + req.params.keyword2;
+//                             for (var i = 1; i < final.length; i++) {
+//                                 final[i] = new Array(4);
+//                                 final[i][0] = result[i - 1] && result[i - 1].date ? result[i - 1].date : "";
+//                                 final[i][1] = result[i - 1] && result[i - 1].value;
+//                                 final[i][2] = result2 && result2.length && result2[i - 1].value ? result2[i - 1].value : 0;
+//                                 final[i][3] = result3 && result3.length && result3[i - 1].value ? result3[i - 1].value : 0;
+//                             }
+//                             res.json(final);
+//                         })
+//                 })
+//             })
+//     } catch (err) { console.log(err) }
+// })
+
+// app.get('/:region/:keyword', async (req, res) => {
+//     try {
+//         var result = [];
+//         await googleTrends.interestByRegion({
+//             keyword: req.params.keyword,
+//             startTime: new Date('2017-02-01'),
+//             endTime: new Date('2017-02-01'),
+//             resolution: req.params.keyword
+//         })
+//             .then((results) => {
+//                 var arr = JSON.parse(results).default.trendingSearchesDays.trendingSearches
+//                 for (var i = 0; i < arr.length; i++) {
+//                     // result.push(arr[i].title.query)
+//                     result.push(arr[i])
+//                 }
+//                 res.json(result)
+//                 console.log(res);
+//             })
+//     } catch (err) { console.log(err) }
+// });
+// ==============================================================================
