@@ -89,35 +89,32 @@ function getGoogleTrends(req, res, next) {
 
                 // find a document
 
-                const docs = dailyTrendsSchema.find({
-                    'dailyTrends.date': req.params.day,
-                    'dailyTrends.country': req.params.country,
-                    'dailyTrends.title.query': 'PSG - Lille'
-                }, function (err, person) {
-                    if (err) {
-                        const mongoDBRes2 = dailyTrendsObject.save();
+                // const docs = dailyTrendsSchema.find({
+                //     'dailyTrends.date': req.params.day,
+                //     'dailyTrends.country': req.params.country,
+                //     'dailyTrends.title.query': 'PSG - Lille'
+                // }, function (err, person) {
+                //     if (err) {
+                //         const mongoDBRes2 = dailyTrendsObject.save();
 
-                        const docs2 = dailyTrendsSchema.find({
-                            'dailyTrends.date': req.params.day,
-                            'dailyTrends.country': req.params.country,
-                            'dailyTrends.title.query': 'PSG - Lille'
-                        }, function (err, person) {
-                            if (err) {
-                                return handleError(err);
-                            }
-                            // Prints "Space Ghost is a talk show host".
-                            console.log('response after create is %s: ', JSON.stringify(person[0].dailyTrends.date));
-                        });
+                //         const docs2 = dailyTrendsSchema.find({
+                //             'dailyTrends.date': req.params.day,
+                //             'dailyTrends.country': req.params.country,
+                //             'dailyTrends.title.query': 'PSG - Lille'
+                //         }, function (err, person) {
+                //             if (err) {
+                //                 return handleError(err);
+                //             }
+                //             // Prints "Space Ghost is a talk show host".
+                //             console.log('response after create is %s: ', JSON.stringify(person[0].dailyTrends.date));
+                //         });
 
-                        return;
-                        //return handleError(err);
-                    }
-                    // Prints "Space Ghost is a talk show host".
-                    console.log('response already created is %s: ', JSON.stringify(person[0].dailyTrends.date));
-                });
-
-                // MongoDB may return the docs in any order unless you explicitly sort
-                // docs.map(doc => doc.date).sort();
+                //         return;
+                //         //return handleError(err);
+                //     }
+                //     // Prints "Space Ghost is a talk show host".
+                //     console.log('response already created is %s: ', JSON.stringify(person[0].dailyTrends.date));
+                // });
             }
             catch (err) {
                 console.log('mongo failure: ' + err);
