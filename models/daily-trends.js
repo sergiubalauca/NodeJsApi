@@ -1,67 +1,88 @@
 const mongoose = require('mongoose');
 
-// const dailyTrendsSchema = new mongoose.Schema({
-//     type: 'array',
-//     items: {
-//         title: {
-//             type: 'object',
-//             properties: {
-//                 query: { type: 'string' },
-//                 exploreLink: { type: String }
-//             },
-//             type: 'object',
-//             properties: {
-//                 formattedTraffic: { type: 'string' }
-//             },
-//             type: 'array',
-//             items: {
+const dailyTrendsSchema = new mongoose.Schema({
+    dailyTrends: {
+        type: 'object',
+        properties: {
+            date: 'date',
+            country: 'string',
+            title: {
+                type: 'object',
+                properties: {
+                    query: { type: 'string' },
+                    exploreLink: { type: 'string', required: true }
+                }
+            },
+            formattedTraffic: {
+                type: 'object',
+            },
+            relatedQueries: {
+                type: 'array',
+                items: {
+                    query: {
+                        type: 'string',
+                    },
+                    exploreLink: {
+                        type: 'string'
+                    }
+                }
+            },
+            image: {
+                type: 'object',
+                properties: {
+                    newsUrl: {
+                        type: 'string'
+                    },
+                    source: {
+                        type: 'string'
+                    },
+                    imageUrl: {
+                        type: 'string'
+                    }
+                }
+            },
+            articles: {
+                type: 'array',
+                items: {
+                    title: {
+                        type: 'string'
+                    },
+                    timeAgo: {
+                        type: 'string'
+                    },
+                    source: {
+                        type: 'string'
+                    },
+                    image: {
+                        type: 'object',
+                        properties: {
+                            newsUrl: {
+                                type: 'string'
+                            },
+                            source: {
+                                type: 'string'
+                            },
+                            imageUrl: {
+                                type: 'string'
+                            }
+                        }
+                    },
+                    url: {
+                        type: 'string'
+                    },
+                    snippet: {
+                        type: 'string'
+                    }
+                }
+            },
+            shareUrl: {
+                type: 'string'
+            },
+        },
+        indexes: ['date', 'country', 'title'],
+    }
+});
 
-//             }
-//         }
-//     }
-// });
-//     export interface DailyTrendsDto {
-//     items: DailyTrendsItemDto[];
-// }
-
-// export interface DailyTrendsItemDto {
-//     title: TitleDto | null;
-//     formattedTraffic: string | null;
-//     relatedQueries: RelatedQueryDto[];
-//     image: ImageDto | null;
-//     articles: ArticleDto[] | null;
-//     shareUrl: string | null;
-// }
-
-// export interface ArticleDto {
-//     title: string | null;
-//     timeAgo: string | null;
-//     source: string | null;
-//     image: ImageDto | null;
-//     url: string | null;
-//     snippet: string | null;
-// }
-
-// export interface ImageDto {
-//     newsUrl: string | null;
-//     source: string | null;
-//     imageUrl: string | null;
-// }
-
-// export interface RelatedQueryDto {
-//     queries: RelatedQueriesDto[];
-// }
-
-// export interface TitleDto {
-//     exploreLink: string | null;
-//     query: string | null;
-// }
-
-// export interface RelatedQueriesDto {
-//     queryItem: string | null;
-// }
-
-// })
 const testSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -74,3 +95,4 @@ const testSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('testSchema', testSchema);
+module.exports = mongoose.model('dailyTrendsSchema', dailyTrendsSchema);
