@@ -77,7 +77,7 @@ function getGoogleTrends(req, res, next) {
                         let docs = dailyTrendsSchema.findOne({
                             'dailyTrends.date': req.params.day,
                             'dailyTrends.country': req.params.country,
-                            'dailyTrends.title.query': gTrends[i].title.query
+                            'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery'
                         }, function (err, dailyTrendsDBExists) {
                             if (err) {
                                 return handleError(err);
