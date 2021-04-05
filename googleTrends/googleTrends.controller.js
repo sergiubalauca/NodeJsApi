@@ -37,8 +37,7 @@ async function getGoogleTrends(req, res, next) {
                     // console.log('16: ' + gTrends[0].shareUrl);
                     let arr = gTrends;
                     for (let i = 0; i < arr.length; i++) {
-
-
+                        
                         const dailyTrendsObject = new dailyTrendsSchema({
                             dailyTrends: {
                                 date: req.params.day,
@@ -88,7 +87,7 @@ async function getGoogleTrends(req, res, next) {
                         });
                         console.log('Articles length for daily-trend: ' + " - " + i + " - " + gTrends[i].articles.length)
                         //DELETE ALL RECORDS IN THE DOCUMENT
-                        // dailyTrendsSchema.deleteMany({ 'dailyTrends.date': /*req.params.day*/  '2021-04-04'  }, function (err) {
+                        // dailyTrendsSchema.deleteMany(/*{ 'dailyTrends.date': req.params.day  '2021-04-04'  },*/ function (err) {
                         //     if(err) console.log(err);
                         //     console.log("Successful deletion");
                         //   });
@@ -102,7 +101,7 @@ async function getGoogleTrends(req, res, next) {
                             if (err) {
                                 console.log('ERROR again1: ' + err);
                             }
-                            // console.log('dailyTrendsDBExists? ' + dailyTrendsDBExists ? dailyTrendsDBExists : 'does not exist');
+                            // console.log('dailyTrendsDBExists? ' + JSON.stringify(dailyTrendsDBExists.dailyTrends));
                             // console.log('length: ' + " - " + i + " - " + gTrends[i].articles.length)
                             // dailyTrendsDBExists = null || 'default';
                             // console.log('do we have i ? ' + i)
@@ -114,16 +113,16 @@ async function getGoogleTrends(req, res, next) {
                                 if (gTrends[i].articles) {
                                     for (let i2 = 0; i2 < gTrends[i].articles.length; i2++) {
                                         // console.log('gTrends.articles? ' + gTrends[i].articles[i2] ? gTrends[i].articles[i2] : 'does not exist');
-
+                                     
                                         let articleToInsert =
                                         {
                                             title: gTrends[i].articles[i2].title ? gTrends[i].articles[i2].title : undefined,
                                             timeAgo: gTrends[i].articles[i2].timeAgo ? gTrends[i].articles[i2].timeAgo : undefined,
                                             source: gTrends[i].articles[i2].source ? gTrends[i].articles[i2].source : undefined,
                                             image: {
-                                                // newsUrl: gTrends[i].articles[i2].image.newsUrl ? gTrends[i].articles[i2].image.newsUrl : undefined,
-                                                // source: gTrends[i].articles[i2].image.source ? gTrends[i].articles[i2].image.source : undefined,
-                                                // imageUrl: gTrends[i].articles[i2].image.imageUrl ? gTrends[i].articles[i2].image.imageUrl : undefined
+                                                newsUrl: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.newsUrl : undefined,
+                                                source: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.source : undefined,
+                                                imageUrl: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.imageUrl : undefined
 
                                             },
                                             url: gTrends[i].articles[0].url ? gTrends[i].articles[0].url : undefined,
