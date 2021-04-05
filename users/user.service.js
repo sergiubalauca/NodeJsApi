@@ -25,7 +25,7 @@ async function authenticate({ username, password }) {
     if (!user) throw 'Username or password is incorrect';
 
     // create a jwt token that is valid for 7 days
-    const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '30m' });
+    const token = jwt.sign({ sub: user.id }, config.secret, { expiresIn: '2h' });
 
     return {
         ...omitPassword(user),
