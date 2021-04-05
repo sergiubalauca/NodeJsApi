@@ -12,8 +12,8 @@ router.get('/:country/:day/', getGoogleTrends);
 
 module.exports = router;
 
-function getGoogleTrends(req, res, next) {
-    googleTrends.getGoogleTrends(req.params.day, req.params.country)
+async function getGoogleTrends(req, res, next) {
+    await googleTrends.getGoogleTrends(req.params.day, req.params.country)
         .then(gTrends => {
             try {
                 if (gTrends.length !== 0) {
