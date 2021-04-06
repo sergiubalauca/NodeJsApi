@@ -26,11 +26,11 @@ const myPromise = new Promise((resolve, reject) => {
     reject('problem, boy..');
 });
 
-setInterval(() => {
-    myPromise.then(getGoogleTrends('2021-04-06', 'RO'))
-}, 5000)
+// setInterval(() => {
+//     myPromise.then(getGoogleTrends('2021-04-06', 'RO'));
+// }, 5000)
 
-
+myPromise.then(getGoogleTrends('2021-04-06', 'RO'))
 
 // getGoogleTrends('2021-04-06', 'RO');
 
