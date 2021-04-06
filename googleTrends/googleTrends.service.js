@@ -43,18 +43,18 @@ async function getGoogleTrends(day, country) {
     catch (err) {
         console.log(err)
     }
+    
+    // setInterval(() => {
+    //     refreshMongoDB(day, country, result).then(res => {
+    //         // console.log(res);
+    //         // return result;
+    //     });
+    // }, 60000)
 
-    setInterval(() => {
-        refreshMongoDB(day, country, result).then(res => {
-            // console.log(res);
-            // return result;
-        });
-    }, 60000)
-
-    // await refreshMongoDB(day, country, result).then(res => {
-    //     // console.log(res);
-    //     // return result;
-    // });
+    await refreshMongoDB(day, country, result).then(res => {
+        // console.log(res);
+        // return result;
+    });
     return result;
 };
 
