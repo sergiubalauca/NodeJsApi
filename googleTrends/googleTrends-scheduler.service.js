@@ -22,7 +22,7 @@ const myPromise = new Promise((resolve, reject) => {
     db.once('open', () => console.log('Database connected!'));
 
     // if (db.once('open'))
-        resolve('connected');
+    resolve('connected');
     reject('problem, boy..');
 });
 
@@ -79,8 +79,7 @@ async function getGoogleTrends(day, country) {
     // }, 60000, { iterations: 10 })
 
     await refreshMongoDB(day, country, result).then(res => {
-        // console.log(res);
-        // return result;
+        mongoose.disconnect();
     });
     // return result;
 };
@@ -185,8 +184,8 @@ async function refreshMongoDB(day, country, gTrends) {
                 });
             }
         }
+        
     }
-
 
     catch (err) {
         console.log('mongo failure: ' + err);
