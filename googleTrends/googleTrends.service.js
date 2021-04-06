@@ -1,6 +1,7 @@
 ﻿const express = require('express');
 const { json } = require('body-parser');
 const googleTrends = require('google-trends-api');
+const intervalPromise = require('interval-promise');
 
 /* we want the router portion from express */
 const router = express.Router();
@@ -43,13 +44,18 @@ async function getGoogleTrends(day, country) {
     catch (err) {
         console.log(err)
     }
-    
+
     // setInterval(() => {
     //     refreshMongoDB(day, country, result).then(res => {
     //         // console.log(res);
     //         // return result;
     //     });
     // }, 60000)
+
+    // Run a function 10 times with 1 second between each iteration
+    // intervalPromise(async () => {
+    //     await refreshMongoDB(day, country, result);
+    // }, 60000, { iterations: 10 })
 
     await refreshMongoDB(day, country, result).then(res => {
         // console.log(res);
@@ -130,7 +136,7 @@ async function refreshMongoDB(day, country, gTrends) {
                         shareUrl: gTrends[i].shareUrl ? gTrends[i].shareUrl : undefined
                     }
                 });
-                console.log('Articles length for daily-trend: ' + ' - ' + i + ' - ' + gTrends[i].title.query + 'article length: ' + gTrends[i].articles.length)
+                console.log('Ddaily-trend: ' + ' - ' + i + ' - ' + gTrends[i].title.query + ' article length: ' + gTrends[i].articles.length)
                 //DELETE ALL RECORDS IN THE DOCUMENT
                 // dailyTrendsSchema.deleteMany(/*{ 'dailyTrends.date': day  '2021-04-04'  },*/ function (err) {
                 //     if(err) console.log(err);
@@ -152,6 +158,7 @@ async function refreshMongoDB(day, country, gTrends) {
                     // console.log('do we have i ? ' + i)
                     if (dailyTrendsDBExists === null) {
                         dailyTrendsObject.save();
+                        console.log('Saved new daily-trend: ' + gTrends[i].title.query);
                     }
                     else {
 
