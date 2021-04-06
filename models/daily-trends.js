@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+// See link: <https://mongoosejs.com/docs/deprecations.html#findandmodify>. 
+// Next line is for deprecation message in the console because of using mongoose's findOneAndUpdate()
+mongoose.set('useFindAndModify', false);
+
 const dailyTrendsSchema = new mongoose.Schema({
     dailyTrends: {
         type: 'object',
