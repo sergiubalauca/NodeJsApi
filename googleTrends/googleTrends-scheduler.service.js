@@ -33,7 +33,7 @@ const myPromise = new Promise((resolve, reject) => {
 //     myPromise.then(getGoogleTrends('2021-04-06', 'RO'));
 // }, 5000)
 
-myPromise.then(getGoogleTrends('2021-04-06', 'RO'))
+myPromise.then(getGoogleTrends(new Date(), 'RO'))
 
 // getGoogleTrends('2021-04-06', 'RO');
 
