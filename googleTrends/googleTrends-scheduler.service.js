@@ -166,8 +166,8 @@ async function refreshMongoDB(day, country, gTrends) {
 
                                 let articleToInsert =
                                 {
-                                    title: gTrends[i].articles[i2].title ? gTrends[i].articles[i2].title : undefined,
-                                    timeAgo: gTrends[i].articles[i2].timeAgo ? gTrends[i].articles[i2].timeAgo : undefined,
+                                    title: gTrends[i].articles[i2].title ? gTrends[i].articles[i2].title : undefined/*,
+                                    timeAgo: gTrends[i].articles[i2].timeAgo ? gTrends[i].articles[i2].timeAgo : undefined*/,
                                     source: gTrends[i].articles[i2].source ? gTrends[i].articles[i2].source : undefined,
                                     image: {
                                         newsUrl: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.newsUrl : undefined,
