@@ -1,9 +1,7 @@
 ﻿require('dotenv').config();
 const express = require('express');
-const { json } = require('body-parser');
+// const mongoDbConnection = require('../server');
 const googleTrends = require('google-trends-api');
-const intervalPromise = require('interval-promise');
-var mongo = require('mongodb');
 const mongoose = require('mongoose');
 /* we want the router portion from express */
 const router = express.Router();
@@ -32,8 +30,18 @@ const myPromise = new Promise((resolve, reject) => {
 // setInterval(() => {
 //     myPromise.then(getGoogleTrends('2021-04-06', 'RO'));
 // }, 5000)
+let dayString1;
+let day = 0;
+const today1 = new Date();
 
-myPromise.then(getGoogleTrends(new Date(), 'RO'))
+dayString1 =
+    today1.getFullYear() + '-' +
+    String(today1.getMonth() + 1).padStart(2, '0') + '-' +
+    String(today1.getDate() - (day === 0 ? 0 : 1)).padStart(2, '0');
+
+// console.log('day is: ' + dayString1);
+
+myPromise.then(getGoogleTrends(dayString1, 'RO'))
 
 // getGoogleTrends('2021-04-06', 'RO');
 
@@ -137,7 +145,6 @@ async function refreshMongoDB(day, country, gTrends) {
                         console.log('Saved new daily-trend: ' + gTrends[i].title.query);
                     }
                     else {
-
                         if (gTrends[i].articles) {
                             for (let i2 = 0; i2 < gTrends[i].articles.length; i2++) {
 
@@ -177,6 +184,7 @@ async function refreshMongoDB(day, country, gTrends) {
                                         }
                                         else {
                                             //console.log("Updated Docs : " + docs);
+                                            // console.log('Added article to daily trend');
                                         }
                                     }
                                 )
