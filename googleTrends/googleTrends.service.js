@@ -33,7 +33,7 @@ async function getGoogleTrendsFromDB(day, country) {
                 // console.log('daily tren exists: ' + dailyTrendsDBExists.length);
 
                 for (var i = 0; i < dailyTrendsDBExists.length; i++) {
-                    // console.log('daily tren exists: ' + JSON.stringify(dailyTrendsDBExists[i].dailyTrends.title.query));
+                    console.log('daily trends in service: ' + JSON.stringify(dailyTrendsDBExists[i].dailyTrends.title.query));
                     result.push(dailyTrendsDBExists[i].dailyTrends);
                 }
 
@@ -46,7 +46,7 @@ async function getGoogleTrendsFromDB(day, country) {
             // console.log('do we have any daily trends? ' + JSON.stringify(result));
         }
     });
-
+    console.log('do we have results? ' + result.length);
     return result;
 }
 
@@ -94,12 +94,12 @@ async function getGoogleTrends(day, country) {
     //     await refreshMongoDB(day, country, result);
     // }, 60000, { iterations: 10 })
 
-    // await refreshMongoDB(day, country, result).then(res => {
-    //     // console.log(res);
-    //     // return result;
-    // });
+    await refreshMongoDB(day, country, result).then(res => {
+        // console.log(res);
+        // return result;
+    });
 
-    await getGoogleTrendsFromDB(day, country);
+    // await getGoogleTrendsFromDB(day, country);
     return result;
 };
 
