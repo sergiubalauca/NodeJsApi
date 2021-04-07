@@ -172,10 +172,10 @@ async function refreshMongoDB(day, country, gTrends) {
                                     {   /* addToSet only pushes items if they do not exist */
                                         $addToSet: {
                                             'dailyTrends.articles': articleToInsert
-                                        },
+                                        }/*,
                                         $set: {
                                             'dailyTrends.formattedTraffic': '123K'
-                                        }
+                                        }*/
                                     },
                                     { upsert: false, new: true },
                                     function (err, docs) {

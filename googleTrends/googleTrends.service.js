@@ -10,8 +10,45 @@ const dailyTrendsSchema = require('../models/daily-trends');
 const db = require('../models/daily-trends');
 
 module.exports = {
-    getGoogleTrends
+    getGoogleTrends,
+    getGoogleTrendsFromDB
 };
+
+async function getGoogleTrendsFromDB(day, country) {
+    let result = [];
+
+    let docs = await dailyTrendsSchema.find({
+        'dailyTrends.date': day,
+        'dailyTrends.country': country,
+        // 'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery'
+    }, function (err, dailyTrendsDBExists) {
+        if (err) {
+            console.log('ERROR again1: ' + err);
+        }
+        if (dailyTrendsDBExists === null) {
+            console.log('No daily-trends in db');
+        }
+        else {
+            try {
+                // console.log('daily tren exists: ' + dailyTrendsDBExists.length);
+
+                for (var i = 0; i < dailyTrendsDBExists.length; i++) {
+                    // console.log('daily tren exists: ' + JSON.stringify(dailyTrendsDBExists[i].dailyTrends.title.query));
+                    result.push(dailyTrendsDBExists[i].dailyTrends);
+                }
+
+                // res.json(result);
+                // console.log('RAW result: ' + result.length);
+                //return json(result);
+            } catch (error) {
+                console.log('THE ERROR: ' + error);
+            }
+            // console.log('do we have any daily trends? ' + JSON.stringify(result));
+        }
+    });
+
+    return result;
+}
 
 async function getGoogleTrends(day, country) {
     try {
@@ -24,7 +61,7 @@ async function getGoogleTrends(day, country) {
             if (err) {
                 console.log('oh no error!', err);
             } else {
-                //console.log('RAW result: ' + results);
+                // console.log('RAW result: ' + results);
                 console.log('Sending results for day: ' + day + ' in service');
                 try {
                     var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
@@ -57,10 +94,12 @@ async function getGoogleTrends(day, country) {
     //     await refreshMongoDB(day, country, result);
     // }, 60000, { iterations: 10 })
 
-    await refreshMongoDB(day, country, result).then(res => {
-        // console.log(res);
-        // return result;
-    });
+    // await refreshMongoDB(day, country, result).then(res => {
+    //     // console.log(res);
+    //     // return result;
+    // });
+
+    await getGoogleTrendsFromDB(day, country);
     return result;
 };
 
@@ -190,10 +229,10 @@ async function refreshMongoDB(day, country, gTrends) {
                                     {   /* addToSet only pushes items if they do not exist */
                                         $addToSet: {
                                             'dailyTrends.articles': articleToInsert
-                                        },
+                                        }/*,
                                         $set: {
                                             'dailyTrends.formattedTraffic': '123K'
-                                        }
+                                        }*/
                                     },
                                     { upsert: false, new: true },
                                     function (err, docs) {

@@ -13,9 +13,9 @@ router.get('/:country/:day/', getGoogleTrends);
 module.exports = router;
 
 async function getGoogleTrends(req, res, next) {
-    await googleTrends.getGoogleTrends(req.params.day, req.params.country)
+    await googleTrends.getGoogleTrendsFromDB(req.params.day, req.params.country)
         .then(gTrends => {
-            // console.log('results in controller: ' + JSON.stringify(gTrends));
+            console.log('results in controller: ' + JSON.stringify(gTrends[0].title.query));
             res.json(gTrends)
         })
         .catch(next);
