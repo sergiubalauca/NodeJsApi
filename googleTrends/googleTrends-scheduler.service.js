@@ -115,8 +115,8 @@ async function refreshMongoDB(day, country, gTrends) {
                         },
                         formattedTraffic: gTrends[i].formattedTraffic ? gTrends[i].formattedTraffic : undefined,
                         articles: [{
-                            title: gTrends[i].articles[0].title ? gTrends[i].articles[0].title : undefined,
-                            timeAgo: gTrends[i].articles[0].timeAgo ? gTrends[i].articles[0].timeAgo : undefined,
+                            title: gTrends[i].articles[0].title ? gTrends[i].articles[0].title : undefined/*,
+                            timeAgo: gTrends[i].articles[0].timeAgo ? gTrends[i].articles[0].timeAgo : undefined*/,
                             source: gTrends[i].articles[0].source ? gTrends[i].articles[0].source : undefined,
                             image: {
                                 newsUrl: gTrends[i].articles[0].image ? gTrends[i].articles[0].image.newsUrl : undefined,
