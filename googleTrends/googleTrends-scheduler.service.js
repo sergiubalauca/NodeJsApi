@@ -5,7 +5,7 @@ const googleTrends = require('google-trends-api');
 const mongoose = require('mongoose');
 /* we want the router portion from express */
 const router = express.Router();
-
+const intervalPromise = require('interval-promise');
 const dailyTrendsSchema = require('../models/daily-trends');
 
 module.exports = {
@@ -40,7 +40,10 @@ dayString1 =
     String(today1.getDate() - (day === 0 ? 0 : 1)).padStart(2, '0');
 
 // console.log('day is: ' + dayString1);
-
+// Run a function 10 times with 1 second between each iteration
+// intervalPromise(async () => {
+//     myPromise.then(getGoogleTrends(dayString1, 'RO'));
+// }, 60000, { iterations: 10 })
 myPromise.then(getGoogleTrends(dayString1, 'RO'))
 
 // getGoogleTrends('2021-04-06', 'RO');
@@ -111,6 +114,19 @@ async function refreshMongoDB(day, country, gTrends) {
                             exploreLink: gTrends[i].title.exploreLink ? gTrends[i].title.exploreLink : undefined
                         },
                         formattedTraffic: gTrends[i].formattedTraffic ? gTrends[i].formattedTraffic : undefined,
+                        articles: [{
+                            title: gTrends[i].articles[0].title ? gTrends[i].articles[0].title : undefined,
+                            timeAgo: gTrends[i].articles[0].timeAgo ? gTrends[i].articles[0].timeAgo : undefined,
+                            source: gTrends[i].articles[0].source ? gTrends[i].articles[0].source : undefined,
+                            image: {
+                                newsUrl: gTrends[i].articles[0].image ? gTrends[i].articles[0].image.newsUrl : undefined,
+                                source: gTrends[i].articles[0].image ? gTrends[i].articles[0].image.source : undefined,
+                                imageUrl: gTrends[i].articles[0].image ? gTrends[i].articles[0].image.imageUrl : undefined
+
+                            },
+                            url: gTrends[i].articles[0].url ? gTrends[i].articles[0].url : undefined,
+                            snippet: gTrends[i].articles[0].snippet ? gTrends[i].articles[0].snippet : undefined
+                        }],
                         // relatedQueries: [{
                         //     query: gTrends[0].relatedQueries[0].query ? gTrends[0].relatedQueries[0].query : undefined,
                         //     exploreLink: gTrends[0].relatedQueries[0].exploreLink ? gTrends[0].relatedQueries[0].exploreLink : undefined
@@ -159,23 +175,25 @@ async function refreshMongoDB(day, country, gTrends) {
                                         imageUrl: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.imageUrl : undefined
 
                                     },
-                                    url: gTrends[i].articles[0].url ? gTrends[i].articles[0].url : undefined,
-                                    snippet: gTrends[i].articles[0].snippet ? gTrends[i].articles[0].snippet : undefined
+                                    url: gTrends[i].articles[i2].url ? gTrends[i].articles[i2].url : undefined,
+                                    snippet: gTrends[i].articles[i2].snippet ? gTrends[i].articles[i2].snippet : undefined
                                 };
                                 // console.log('article to insert: ' + JSON.stringify(articleToInsert));
                                 dailyTrendsSchema.findOneAndUpdate(
                                     {
                                         'dailyTrends.date': day,
                                         'dailyTrends.country': country,
-                                        'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery'
+                                        'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery'/*,
+                                        'dailyTrends.articles.title': gTrends[i].articles[i2].title,
+                                        'dailyTrends.articles.title': gTrends[i].articles[i2].source*/
                                     },
                                     {   /* addToSet only pushes items if they do not exist */
                                         $addToSet: {
                                             'dailyTrends.articles': articleToInsert
-                                        }/*,
+                                        },
                                         $set: {
-                                            'dailyTrends.formattedTraffic': '123K'
-                                        }*/
+                                            'dailyTrends.formattedTraffic': gTrends[i].formattedTraffic
+                                        }
                                     },
                                     { upsert: false, new: true },
                                     function (err, docs) {
