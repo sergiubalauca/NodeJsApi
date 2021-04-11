@@ -150,7 +150,8 @@ async function refreshMongoDB(day, country, gTrends) {
                 let docs = await dailyTrendsSchema.findOne({
                     'dailyTrends.date': day,
                     'dailyTrends.country': country,
-                    'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery'
+                    'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : '',
+                    'dailyTrends.shareUrl': gTrends[i].shareUrl ? gTrends[i].shareUrl : ''
                 }, function (err, dailyTrendsDBExists) {
                     if (err) {
                         console.log('ERROR again1: ' + err);
