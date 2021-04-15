@@ -44,7 +44,7 @@ dayString1 =
 // intervalPromise(async () => {
 //     myPromise.then(getGoogleTrends(dayString1, 'RO'));
 // }, 60000, { iterations: 10 })
-myPromise.then(getGoogleTrends(dayString1, 'RO'))
+myPromise.then(getGoogleTrends(dayString1, 'RO'));
 
 // getGoogleTrends('2021-04-06', 'RO');
 
@@ -79,6 +79,15 @@ async function getGoogleTrends(day, country) {
     catch (err) {
         console.log(err)
     }
+
+    await refreshMongoDB(day, country, result).then(res => {
+        console.log('performing db actions...');
+        mongoose.disconnect().finally(() => {
+            console.log('Disconnected from database.');
+            process.exit();
+        });
+    });
+
     // console.log('res' + JSON.stringify(result));
     // setInterval(() => {
     //     refreshMongoDB(day, country, result).then(res => {
@@ -91,11 +100,6 @@ async function getGoogleTrends(day, country) {
     // intervalPromise(async () => {
     //     await refreshMongoDB(day, country, result);
     // }, 60000, { iterations: 10 })
-
-    await refreshMongoDB(day, country, result).then(res => {
-        mongoose.disconnect();
-    });
-    // return result;
 };
 
 async function refreshMongoDB(day, country, gTrends) {
@@ -148,7 +152,7 @@ async function refreshMongoDB(day, country, gTrends) {
 
                 // CREATE IF IT DOES NOT EXIST
                 let docs = await dailyTrendsSchema.findOne({
-                    // 'dailyTrends.date': day,
+                     'dailyTrends.date': day,
                     'dailyTrends.country': country,
                     'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : '',
                     'dailyTrends.shareUrl': gTrends[i].shareUrl ? gTrends[i].shareUrl : ''
