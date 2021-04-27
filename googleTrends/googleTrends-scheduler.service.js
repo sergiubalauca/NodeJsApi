@@ -44,7 +44,7 @@ dayString1 =
 // intervalPromise(async () => {
 //     myPromise.then(getGoogleTrends(dayString1, 'RO'));
 // }, 60000, { iterations: 10 })
-myPromise.then(getGoogleTrends('2021-04-26', 'RO'));
+myPromise.then(getGoogleTrends(dayString1, 'RO'));
 
 // getGoogleTrends('2021-04-06', 'RO');
 
