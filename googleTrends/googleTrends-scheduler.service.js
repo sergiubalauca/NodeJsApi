@@ -44,7 +44,7 @@ dayString1 =
 // intervalPromise(async () => {
 //     myPromise.then(getGoogleTrends(dayString1, 'RO'));
 // }, 60000, { iterations: 10 })
-myPromise.then(getGoogleTrends(dayString1, 'RO'));
+myPromise.then(getGoogleTrends('2021-04-26', 'RO'));
 
 // getGoogleTrends('2021-04-06', 'RO');
 
@@ -152,7 +152,7 @@ async function refreshMongoDB(day, country, gTrends) {
 
                 // CREATE IF IT DOES NOT EXIST
                 let docs = await dailyTrendsSchema.findOne({
-                     'dailyTrends.date': day,
+                    'dailyTrends.date': day,
                     'dailyTrends.country': country,
                     'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : '',
                     'dailyTrends.shareUrl': gTrends[i].shareUrl ? gTrends[i].shareUrl : ''
@@ -188,7 +188,9 @@ async function refreshMongoDB(day, country, gTrends) {
                                     {
                                         'dailyTrends.date': day,
                                         'dailyTrends.country': country,
-                                        'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery'/*,
+                                        'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery',
+                                        'dailyTrends.url': gTrends[i].articles[i2].url,
+                                        'dailyTrends.snippet': gTrends[i].articles[i2].snippet /*,
                                         'dailyTrends.articles.title': gTrends[i].articles[i2].title,
                                         'dailyTrends.articles.title': gTrends[i].articles[i2].source*/
                                     },
