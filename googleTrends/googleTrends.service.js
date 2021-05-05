@@ -28,26 +28,9 @@ async function getGoogleTrendsFromDB(day, country) {
         if (dailyTrendsDBExists === null) {
             console.log('No daily-trends in db');
         }
-        else {
-            // try {
-            //     // console.log('daily tren exists: ' + dailyTrendsDBExists.length);
+    }).sort({ 'dailyTrends.formattedTraffic': -1 });
 
-            //     for (var i = 0; i < dailyTrendsDBExists.length; i++) {
-            //         console.log('daily trends in service: ' + JSON.stringify(dailyTrendsDBExists[i].dailyTrends.title.query));
-            //         result.push(dailyTrendsDBExists[i].dailyTrends);
-            //     }
-
-            //     // res.json(result);
-            //     // console.log('RAW result: ' + result.length);
-            //     //return json(result);
-            // } catch (error) {
-            //     console.log('THE ERROR: ' + error);
-            // }
-            // console.log('do we have any daily trends? ' + JSON.stringify(result));
-            // console.log('do we have results 1 ? ' + result.length);
-            // return result;
-        }
-    });
+    console.log('Documents found: ' + docs.length);
 
     if (!docs.length == 0) {
         try {
@@ -65,8 +48,7 @@ async function getGoogleTrendsFromDB(day, country) {
             console.log('THE ERROR: ' + error);
         }
     }
-    console.log('do we have results docs ? ' + docs.length);
-    console.log('do we have results 2 ? ' + result.length);
+
     return result;
 }
 
