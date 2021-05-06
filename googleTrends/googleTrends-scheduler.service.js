@@ -8,11 +8,14 @@ const router = express.Router();
 const intervalPromise = require('interval-promise');
 const dailyTrendsSchema = require('../models/daily-trends');
 
+const countries = ['US', 'RO'];
+
 module.exports = {
     getGoogleTrends
 };
 
 const myPromise = new Promise((resolve, reject) => {
+
     if (mongoose.connection.readyState == 0) {
         mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
         const db = mongoose.connection;
@@ -27,9 +30,25 @@ const myPromise = new Promise((resolve, reject) => {
     reject('problem, boy..');
 });
 
-// setInterval(() => {
-//     myPromise.then(getGoogleTrends('2021-04-06', 'RO'));
-// }, 5000)
+var dbQueryCounter = 0;
+var maxDbIdleTime = 5000; //maximum db idle time
+
+var closeIdleDb = function (connection) {
+    var previousCounter = 0;
+    var checker = setInterval(function () {
+        if (previousCounter == dbQueryCounter && dbQueryCounter != 0) {
+            connection.disconnect().finally(() => {
+                console.log('Disconnecting from DB...');
+                process.exit();
+            })
+            clearInterval(closeIdleDb);
+        } else {
+            previousCounter = dbQueryCounter;
+        }
+    }, maxDbIdleTime);
+};
+
+
 let dayString1;
 let day = 0;
 const today1 = new Date();
@@ -39,14 +58,13 @@ dayString1 =
     String(today1.getMonth() + 1).padStart(2, '0') + '-' +
     String(today1.getDate() - (day === 0 ? 0 : 1)).padStart(2, '0');
 
-// console.log('day is: ' + dayString1);
-// Run a function 10 times with 1 second between each iteration
-// intervalPromise(async () => {
-//     myPromise.then(getGoogleTrends(dayString1, 'RO'));
-// }, 60000, { iterations: 10 })
-myPromise.then(getGoogleTrends(dayString1, 'RO'));
+async function runScheduler() {
+    countries.forEach(async (country) => {
+        await getGoogleTrends(dayString1, country).then(console.log('Country: ' + country));
+    });
+};
 
-// getGoogleTrends('2021-04-06', 'RO');
+runScheduler();
 
 async function getGoogleTrends(day, country) {
     try {
@@ -55,21 +73,21 @@ async function getGoogleTrends(day, country) {
         await googleTrends.dailyTrends({
             trendDate: new Date(day),
             geo: country,
-        }, function (err, results) {
+        }, async function (err, results) {
             if (err) {
                 console.log('oh no error!', err);
             } else {
                 //console.log('RAW result: ' + results);
-                console.log('Sending results for day: ' + day + ' in service');
+                console.log('Sending results for day: ' + day + ' | country: ' + country + ' in scheduler');
                 try {
                     var arr = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
                     for (var i = 0; i < arr.length; i++) {
                         result.push(arr[i]);
                     }
+                    await refreshMongoDB(day, country, result).then(res => {
+                        console.log('Finished performing db actions for country:' + country);
 
-                    // res.json(result);
-                    // console.log('RAW result: ' + result.length);
-                    //return json(result);
+                    });
                 } catch (error) {
                     console.log('THE ERROR: ' + error);
                 }
@@ -80,26 +98,7 @@ async function getGoogleTrends(day, country) {
         console.log(err)
     }
 
-    await refreshMongoDB(day, country, result).then(res => {
-        console.log('performing db actions...');
-        mongoose.disconnect().finally(() => {
-            console.log('Disconnected from database.');
-            process.exit();
-        });
-    });
 
-    // console.log('res' + JSON.stringify(result));
-    // setInterval(() => {
-    //     refreshMongoDB(day, country, result).then(res => {
-    //         // console.log(res);
-    //         // return result;
-    //     });
-    // }, 60000)
-
-    // Run a function 10 times with 1 second between each iteration
-    // intervalPromise(async () => {
-    //     await refreshMongoDB(day, country, result);
-    // }, 60000, { iterations: 10 })
 };
 
 async function refreshMongoDB(day, country, gTrends) {
@@ -151,74 +150,81 @@ async function refreshMongoDB(day, country, gTrends) {
                 //   });
 
                 // CREATE IF IT DOES NOT EXIST
-                let docs = await dailyTrendsSchema.findOne({
-                    'dailyTrends.date': day,
-                    'dailyTrends.country': country,
-                    'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : '',
-                    'dailyTrends.shareUrl': gTrends[i].shareUrl ? gTrends[i].shareUrl : ''
-                }, function (err, dailyTrendsDBExists) {
-                    if (err) {
-                        console.log('ERROR again1: ' + err);
-                    }
-
-                    if (dailyTrendsDBExists === null) {
-                        dailyTrendsObject.save();
-                        console.log('Saved new daily-trend: ' + gTrends[i].title.query);
-                    }
-                    else {
-                        if (gTrends[i].articles) {
-                            for (let i2 = 0; i2 < gTrends[i].articles.length; i2++) {
-
-                                let articleToInsert =
-                                {
-                                    title: gTrends[i].articles[i2].title ? gTrends[i].articles[i2].title : undefined/*,
-                                    timeAgo: gTrends[i].articles[i2].timeAgo ? gTrends[i].articles[i2].timeAgo : undefined*/,
-                                    source: gTrends[i].articles[i2].source ? gTrends[i].articles[i2].source : undefined,
-                                    image: {
-                                        newsUrl: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.newsUrl : undefined,
-                                        source: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.source : undefined,
-                                        imageUrl: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.imageUrl : undefined
-
-                                    },
-                                    url: gTrends[i].articles[i2].url ? gTrends[i].articles[i2].url : undefined,
-                                    snippet: gTrends[i].articles[i2].snippet ? gTrends[i].articles[i2].snippet : undefined
-                                };
-                                // console.log('article to insert: ' + JSON.stringify(articleToInsert));
-                                dailyTrendsSchema.findOneAndUpdate(
-                                    {
-                                        'dailyTrends.date': day,
-                                        'dailyTrends.country': country,
-                                        'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery'/*,
-                                        'dailyTrends.url': gTrends[i].articles[i2].url,
-                                        'dailyTrends.snippet': gTrends[i].articles[i2].snippet ,
-                                        'dailyTrends.articles.title': gTrends[i].articles[i2].title,
-                                        'dailyTrends.articles.title': gTrends[i].articles[i2].source*/
-                                    },
-                                    {   /* addToSet only pushes items if they do not exist */
-                                        $addToSet: {
-                                            'dailyTrends.articles': articleToInsert
-                                        },
-                                        $set: {
-                                            'dailyTrends.formattedTraffic': gTrends[i].formattedTraffic
-                                        }
-                                    },
-                                    { upsert: false, new: true },
-                                    function (err, docs) {
-                                        if (err) {
-                                            console.log('ERROR again2: ' + err);
-                                        }
-                                        else {
-                                            //console.log("Updated Docs : " + docs);
-                                            // console.log('Added article to daily trend');
-                                        }
-                                    }
-                                )
-                            }
+                let docs = await dailyTrendsSchema.findOne(
+                    {
+                        'dailyTrends.date': day,
+                        'dailyTrends.country': country,
+                        'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : '',
+                        'dailyTrends.shareUrl': gTrends[i].shareUrl ? gTrends[i].shareUrl : ''
+                    }, async function (err, dailyTrendsDBExists) {
+                        dbQueryCounter ++;
+                        if (err) {
+                            console.log('ERROR again1: ' + err);
                         }
-                    }
 
-                });
+                        if (dailyTrendsDBExists === null) {
+                            await dailyTrendsObject.save();
+                            console.log('Saved new daily-trend: ' + gTrends[i].title.query);
+                            dbQueryCounter ++;
+                        }
+                    });
+
+                if (gTrends[i].articles) {
+                    for (let i2 = 0; i2 < gTrends[i].articles.length; i2++) {
+
+                        let articleToInsert =
+                        {
+                            title: gTrends[i].articles[i2].title ? gTrends[i].articles[i2].title : undefined/*,
+                                timeAgo: gTrends[i].articles[i2].timeAgo ? gTrends[i].articles[i2].timeAgo : undefined*/,
+                            source: gTrends[i].articles[i2].source ? gTrends[i].articles[i2].source : undefined,
+                            image: {
+                                newsUrl: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.newsUrl : undefined,
+                                source: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.source : undefined,
+                                imageUrl: gTrends[i].articles[i2].image ? gTrends[i].articles[i2].image.imageUrl : undefined
+
+                            },
+                            url: gTrends[i].articles[i2].url ? gTrends[i].articles[i2].url : undefined,
+                            snippet: gTrends[i].articles[i2].snippet ? gTrends[i].articles[i2].snippet : undefined
+                        };
+                        // console.log('article to insert: ' + JSON.stringify(articleToInsert));
+                        let docs2 = await dailyTrendsSchema.findOneAndUpdate(
+                            {
+                                'dailyTrends.date': day,
+                                'dailyTrends.country': country,
+                                'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery'/*,
+                                    'dailyTrends.url': gTrends[i].articles[i2].url,
+                                    'dailyTrends.snippet': gTrends[i].articles[i2].snippet ,
+                                    'dailyTrends.articles.title': gTrends[i].articles[i2].title,
+                                    'dailyTrends.articles.title': gTrends[i].articles[i2].source*/
+                            },
+                            {   /* addToSet only pushes items if they do not exist */
+                                $addToSet: {
+                                    'dailyTrends.articles': articleToInsert
+                                },
+                                $set: {
+                                    'dailyTrends.formattedTraffic': gTrends[i].formattedTraffic
+                                }
+                            },
+                            { upsert: false, new: true },
+                            function (err, doc2) {
+                                if (err) {
+                                    console.log('ERROR again2: ' + err);
+                                }
+                                // if (doc2 === null) {
+                                //     console.log('Saved new article: ' + gTrends[i].articles[i2].snippet);
+                                // }
+                                // else {
+                                //     console.log('bla bla car' + gTrends[i].articles[i2].snippet);
+                                // }
+                                dbQueryCounter ++;
+                            }
+                        )
+                    }
+                }
+
             }
+
+            closeIdleDb(mongoose);
         }
 
     }
