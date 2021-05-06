@@ -147,6 +147,7 @@ async function refreshMongoDB(day, country, gTrends) {
                 // dailyTrendsSchema.deleteMany(/*{ 'dailyTrends.date': day  '2021-04-04'  },*/ function (err) {
                 //     if(err) console.log(err);
                 //     console.log("Successful deletion");
+                //     dbQueryCounter ++;
                 //   });
 
                 // CREATE IF IT DOES NOT EXIST
@@ -157,15 +158,15 @@ async function refreshMongoDB(day, country, gTrends) {
                         'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : '',
                         'dailyTrends.shareUrl': gTrends[i].shareUrl ? gTrends[i].shareUrl : ''
                     }, async function (err, dailyTrendsDBExists) {
-                        dbQueryCounter ++;
+                        dbQueryCounter++;
                         if (err) {
                             console.log('ERROR again1: ' + err);
                         }
 
                         if (dailyTrendsDBExists === null) {
                             await dailyTrendsObject.save();
-                            console.log('Saved new daily-trend: ' + gTrends[i].title.query);
-                            dbQueryCounter ++;
+                            console.log('Saved new daily-trend: ' + gTrends[i].title.query + ' for country: ' + country);
+                            dbQueryCounter++;
                         }
                     });
 
@@ -216,7 +217,7 @@ async function refreshMongoDB(day, country, gTrends) {
                                 // else {
                                 //     console.log('bla bla car' + gTrends[i].articles[i2].snippet);
                                 // }
-                                dbQueryCounter ++;
+                                dbQueryCounter++;
                             }
                         )
                     }
