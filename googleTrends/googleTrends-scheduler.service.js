@@ -142,7 +142,7 @@ async function refreshMongoDB(day, country, gTrends) {
                         shareUrl: gTrends[i].shareUrl ? gTrends[i].shareUrl : undefined
                     }
                 });
-                console.log('Ddaily-trend: ' + ' - ' + i + ' - ' + gTrends[i].title.query + ' article length: ' + gTrends[i].articles.length)
+                console.log('Daily-trend: ' + ' - ' + i + ' - (' + country + ') ' + gTrends[i].title.query + ' article length: ' + gTrends[i].articles.length)
                 //DELETE ALL RECORDS IN THE DOCUMENT
                 // dailyTrendsSchema.deleteMany(/*{ 'dailyTrends.date': day  '2021-04-04'  },*/ function (err) {
                 //     if(err) console.log(err);
