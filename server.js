@@ -5,6 +5,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const jwt = require('_helpers/jwt');
+
 const errorHandler = require('_helpers/error-handler');
 const googleTrends = require('google-trends-api');
 const http = require('https');
