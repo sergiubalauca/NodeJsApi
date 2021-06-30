@@ -8,7 +8,7 @@ const router = express.Router();
 const intervalPromise = require('interval-promise');
 const dailyTrendsSchema = require('../models/daily-trends');
 
-const countries = ['US', 'RO'];
+const countries = ['US', 'RO', 'NL'];
 
 module.exports = {
     getGoogleTrends
@@ -150,12 +150,13 @@ async function refreshMongoDB(day, country, gTrends) {
                 //     dbQueryCounter ++;
                 //   });
 
+
                 // CREATE IF IT DOES NOT EXIST
                 let docs = await dailyTrendsSchema.findOne(
                     {
                         'dailyTrends.date': day,
                         'dailyTrends.country': country,
-                        'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : '',
+                        'dailyTrends.title.query': gTrends[i].title.query ? /.*gTrends[i].title.query.*/ : '',
                         'dailyTrends.shareUrl': gTrends[i].shareUrl ? gTrends[i].shareUrl : ''
                     }, async function (err, dailyTrendsDBExists) {
                         dbQueryCounter++;
