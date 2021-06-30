@@ -11,6 +11,7 @@ const jwt = require('jsonwebtoken');
 
 // routes
 router.get('/:country/:day/', getGoogleTrends);
+router.get('/:objectID/', getGoogleTrendsByID)
 
 module.exports = router;
 
@@ -35,3 +36,26 @@ async function getGoogleTrends(req, res, next) {
         })
         .catch(next);
 }
+
+async function getGoogleTrendsByID(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+
+    await googleTrends.getGoogleTrendsFromDbById(req.params.objectID)
+        .then(gTrends => {
+
+            if (token === null) return res.sendStatus(401);
+            // console.log(token);
+            jwt.verify(token, 'gsb', (err, verifiedToken) => {
+                if (err) {
+                    throw { code: 'INVALID_TOKEN', message: 'Secret check token fail' };
+                }
+
+                next();
+            });
+
+            res.json(gTrends);
+        })
+        .catch(next);
+}
+

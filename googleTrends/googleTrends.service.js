@@ -2,6 +2,7 @@
 const { json } = require('body-parser');
 const googleTrends = require('google-trends-api');
 const intervalPromise = require('interval-promise');
+const ObjectId = require('mongodb').ObjectID;
 
 /* we want the router portion from express */
 const router = express.Router();
@@ -11,8 +12,42 @@ const db = require('../models/daily-trends');
 
 module.exports = {
     getGoogleTrends,
+    getGoogleTrendsFromDbById,
     getGoogleTrendsFromDB
 };
+
+async function getGoogleTrendsFromDbById(objectID) {
+    let result = [];
+    console.log('ID received in service: ' + objectID);
+    let docs = await dailyTrendsSchema.find({
+        '_id': ObjectId(objectID)
+    }, function (err, dailyTrendsDBExists) {
+        if (err) {
+            console.log('ERROR again1: ' + err);
+        }
+        if (dailyTrendsDBExists === null) {
+            console.log('No daily-trend found by id in db');
+        }
+    });
+
+    console.log('Document found: ' + docs.length);
+
+    if (!docs.length == 0) {
+        try {
+
+            console.log('daily trend in service: ' + JSON.stringify(docs[0].dailyTrends.title.query));
+
+            result.push(docs[0].dailyTrends);
+
+            console.log('daily trend in service ID: ' + docs[0].docID);
+
+        } catch (error) {
+            console.log('THE ERROR: ' + error);
+        }
+    }
+
+    return result;
+}
 
 async function getGoogleTrendsFromDB(day, country) {
     let result = [];
@@ -43,8 +78,6 @@ async function getGoogleTrendsFromDB(day, country) {
                 docs[i].dailyTrends = { ...docs[i].dailyTrends, docID: docs[i]._id };
 
                 result.push(docs[i].dailyTrends);
-
-                console.log('daily trends in service ID: ' + docs[i].docID);
             }
 
             // res.json(result);
@@ -58,6 +91,7 @@ async function getGoogleTrendsFromDB(day, country) {
     return result;
 }
 
+/* Get trends directly from the lib */
 async function getGoogleTrends(day, country) {
     try {
         var result = [];
