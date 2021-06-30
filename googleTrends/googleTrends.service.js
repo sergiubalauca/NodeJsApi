@@ -38,8 +38,13 @@ async function getGoogleTrendsFromDB(day, country) {
 
             for (var i = 0; i < docs.length; i++) {
                 console.log('daily trends in service: ' + JSON.stringify(docs[i].dailyTrends.title.query));
-                console.log('daily trends in service ID: ' + JSON.stringify(docs[i]._id));
+
+                /* Send the ObjectID prop for uniqueness */
+                docs[i].dailyTrends = { ...docs[i].dailyTrends, docID: docs[i]._id };
+
                 result.push(docs[i].dailyTrends);
+
+                console.log('daily trends in service ID: ' + docs[i].docID);
             }
 
             // res.json(result);
