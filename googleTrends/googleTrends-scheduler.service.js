@@ -155,7 +155,7 @@ async function refreshMongoDB(day, country, gTrends) {
                     {
                         'dailyTrends.date': day,
                         'dailyTrends.country': country,
-                        'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : '',
+                        // 'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : '',
                         'dailyTrends.shareUrl': gTrends[i].shareUrl ? gTrends[i].shareUrl : ''
                     }, async function (err, dailyTrendsDBExists) {
                         dbQueryCounter++;
