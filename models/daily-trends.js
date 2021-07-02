@@ -18,7 +18,7 @@ const dailyTrendsSchema = new mongoose.Schema({
                 }
             },
             formattedTraffic: {
-                type: 'string',
+                type: 'number',
             },
             relatedQueries: {
                 type: 'array',

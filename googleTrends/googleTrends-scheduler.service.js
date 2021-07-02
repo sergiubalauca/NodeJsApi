@@ -116,7 +116,7 @@ async function refreshMongoDB(day, country, gTrends) {
                             query: gTrends[i].title.query ? gTrends[i].title.query : undefined,
                             exploreLink: gTrends[i].title.exploreLink ? gTrends[i].title.exploreLink : undefined
                         },
-                        formattedTraffic: gTrends[i].formattedTraffic ? gTrends[i].formattedTraffic : undefined,
+                        formattedTraffic: gTrends[i].formattedTraffic ? +gTrends[i].formattedTraffic.slice(0, -2) : undefined,
                         articles: [{
                             title: gTrends[i].articles[0].title ? gTrends[i].articles[0].title : undefined/*,
                             timeAgo: gTrends[i].articles[0].timeAgo ? gTrends[i].articles[0].timeAgo : undefined*/,
@@ -203,7 +203,7 @@ async function refreshMongoDB(day, country, gTrends) {
                                     'dailyTrends.articles': articleToInsert
                                 },
                                 $set: {
-                                    'dailyTrends.formattedTraffic': gTrends[i].formattedTraffic
+                                    'dailyTrends.formattedTraffic': +gTrends[i].formattedTraffic.slice(0, -2)
                                 }
                             },
                             { upsert: false, new: true },
