@@ -192,7 +192,8 @@ async function refreshMongoDB(day, country, gTrends) {
                             {
                                 'dailyTrends.date': day,
                                 'dailyTrends.country': country,
-                                'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery'/*,
+                                // 'dailyTrends.title.query': gTrends[i].title.query ? gTrends[i].title.query : 'notitlequery',
+                                'dailyTrends.shareUrl': gTrends[i].shareUrl ? gTrends[i].shareUrl : ''/*,
                                     'dailyTrends.url': gTrends[i].articles[i2].url,
                                     'dailyTrends.snippet': gTrends[i].articles[i2].snippet ,
                                     'dailyTrends.articles.title': gTrends[i].articles[i2].title,
